@@ -12,8 +12,9 @@ def cArrayDefFromList(arraytype, arrayname, arraylist, arrayradix=2**32):
     print(arraytype, arrayname + arrayelems)
     print("{ ", end="")
     for i in range(0,len(arraylist)-1):
-        if i and i % 8 == 0:
-            print
+        if i and i % 16 == 0:
+            print()
+            print("  ", end="")
         print(Hex(arraylist[i], arrayradix) + ", ", end="")
     i += 1
     print(Hex(arraylist[i], arrayradix) + " }", end="")
