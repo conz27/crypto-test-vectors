@@ -78,13 +78,11 @@ def genlv(i, plv1_i_j, plv2_i_j):
 
 print("LA1 ID (16 bits, padded to 32 bits) =")
 la_id1 = getrandbits(16)
-print(Hex(la_id1, radix_32))
-print()
+print(Hex(la_id1, radix_32) + os.linesep)
 
 print("LA2 ID (16 bits, padded to 32 bits) =")
 la_id2 = getrandbits(16)
-print(Hex(la_id2, radix_32))
-print()
+print(Hex(la_id2, radix_32) + os.linesep)
 
 print("""
 i = 0
@@ -94,8 +92,7 @@ j is randomly chosen in [1,20]
 
 print("j (in range [1,20], padded to 32 bits) =")
 j = randint(1,20)
-print(Hex(j, radix_32))
-print()
+print(Hex(j, radix_32) + os.linesep)
 
 ls1_0 = genls(1, 0, None, None)
 plv1_0_j = genplv(1, 0, la_id1, ls1_0, j)
@@ -113,8 +110,7 @@ j is randomly chosen in [1,20]
 
 print("j (in range [1,20], padded to 32 bits) =")
 j = randint(1,20)
-print(Hex(j, radix_32))
-print()
+print(Hex(j, radix_32) + os.linesep)
 
 ls1_1 = genls(1, 1, la_id1, ls1_0)
 plv1_1_j = genplv(1, 1, la_id1, ls1_1, j)
