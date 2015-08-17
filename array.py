@@ -6,10 +6,10 @@ from radix import *
 # Output the definition of an array from a list:
 #
 def cArrayDefFromList(arraytype, arrayname, arraylist, arrayradix=2**32):
-    #if arraytype != "" and arrayname != "":
-    arrayelems = "[" + str(len(arraylist)) + "] = "
+    if arrayname != "":
+        arrayelems = "[" + str(len(arraylist)) + "] = "
+        print(arraytype, arrayname + arrayelems)
 
-    print(arraytype, arrayname + arrayelems)
     print("{ ", end="")
     for i in range(0,len(arraylist)-1):
         if i and i % 16 == 0:
