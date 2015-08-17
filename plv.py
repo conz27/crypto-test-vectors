@@ -86,7 +86,7 @@ print(Hex(la_id2, radix_16) + os.linesep)
 
 print("""
 i = 0
------
+=====
 j is randomly chosen in [1,20]
 """)
 
@@ -94,17 +94,23 @@ print("j (in range [1,20], padded to 32 bits) =")
 j = randint(1,20)
 print(Hex(j, radix_32) + os.linesep)
 
+print("LA1")
+print("---")
 ls1_0 = genls(1, 0, None, None)
 plv1_0_j = genplv(1, 0, la_id1, ls1_0, j)
 
+print("LA2")
+print("---")
 ls2_0 = genls(2, 0, None, None)
 plv2_0_j = genplv(2, 0, la_id2, ls2_0, j)
 
+print("lv(0,j)")
+print("-------")
 lv_0_j = genlv(0, plv1_0_j, plv2_0_j)
 
 print("""
 i = 1
------
+=====
 j is randomly chosen in [1,20]
 """)
 
@@ -112,10 +118,16 @@ print("j (in range [1,20], padded to 32 bits) =")
 j = randint(1,20)
 print(Hex(j, radix_32) + os.linesep)
 
+print("LA1")
+print("---")
 ls1_1 = genls(1, 1, la_id1, ls1_0)
 plv1_1_j = genplv(1, 1, la_id1, ls1_1, j)
 
+print("LA2")
+print("---")
 ls2_1 = genls(2, 1, la_id2, ls2_0)
 plv2_1_j = genplv(2, 1, la_id2, ls2_1, j)
 
+print("lv(1,j)")
+print("-------")
 lv_1_j = genlv(1, plv1_1_j, plv2_1_j)
