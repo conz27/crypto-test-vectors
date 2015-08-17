@@ -17,25 +17,25 @@ seed(333)
 
 def genls(id, i, la_id, ls_im1):
     if i == 0:
-        print("ls" + str(id) + "(0) = AES key (128 bits) = randomly generated 128 bits ")
+        print("ls" + str(id) + "(0) = AES key (128 bits) = randomly generated 128 bits for every device")
         ls_i = "{0:032X}".format(getrandbits(128))
         print("0x" + ls_i)
         cArrayDef("", "ls" + str(id) + "_" + str(i), long(ls_i, 16), 128/8, radix_8, False)
         print(os.linesep)
     else:
-        print("SHA-256 input (128 bits) = la_id" + str(id) + "^{32-bit} || ls" + str(id) + "(" + str(i-1) +")" + "^{128-bit} = ")
-        sha256_in = "{0:040X}".format((la_id << 128) + long(ls_im1, 16))
+        print("SHA-256 input (128 bits) = la_id" + str(id) + " (16-bit) || ls" + str(id) + "(" + str(i-1) +")" + " (128-bit) || 0 (112-bit) = ")
+        sha256_in = "{0:040X}".format(((la_id << 128) + long(ls_im1, 16)) << 112)
         print("0x" + sha256_in)
-        cArrayDef("", "sha256_in"+ str(id) + "_" + str(i), long(sha256_in, 16), (32+128)/8, radix_8, False)
+        cArrayDef("", "sha256_in"+ str(id) + "_" + str(i), long(sha256_in, 16), 256/8, radix_8, False)
         print(os.linesep)
 
-        print("SHA-256 output (256 bits) = SHA-256(la_id" + str(id) + " || ls" + str(id) + "(" + str(i-1) +"))")
+        print("SHA-256 output (256 bits) = SHA-256(la_id" + str(id) + " || ls" + str(id) + "(" + str(i-1) +")) || 0^{112}) =")
         sha256_out = sha256(sha256_in.decode('hex')).hexdigest()
         print("0x" + sha256_out)
         cArrayDef("", "sha256_out"+ str(id) + "_" + str(i), long(sha256_out, 16), 256/8, radix_8, False)
         print(os.linesep)
 
-        print("ls" + str(id) + "(" + str(i) +") = AES key (128 bits) = first 128 bits of SHA-256(la_id" + str(id) + " || ls" + str(id) + "(" + str(i-1) +"))")
+        print("ls" + str(id) + "(" + str(i) +") = AES key (128 bits) = first 128 bits of SHA-256(la_id" + str(id) + " || ls" + str(id) + "(" + str(i-1) +")) =")
         ls_i = "{0:032x}".format(long(sha256_out, 16) >> 128)
         print("0x" + ls_i)
         cArrayDef("", "ls" + str(id)  + "_" + str(i), long(ls_i, 16), 128/8, radix_8, False)
@@ -46,13 +46,13 @@ def genls(id, i, la_id, ls_im1):
 def genplv(id, i, la_id, ls_i, j):
     aes_obj = AES.new(ls_i.decode('hex'), AES.MODE_ECB)
 
-    print("AES input plaintext (128 bits) = 0^{64-bit} || la_id" + str(id) + "^{32-bit} || j^{32-bit} = ")
-    aes_in_j = "{0:032X}".format(la_id * radix_32 + j)
+    print("AES input plaintext (128 bits) = la_id" + str(id) + " (16-bit) || j (32-bit) || 0 (80-bit) = ")
+    aes_in_j = "{0:032X}".format((la_id * radix_32 + j) << 80)
     print("0x" + aes_in_j)
     cArrayDef("", "aes_in"+ str(id) + "_j", long(aes_in_j, 16), 128/8, radix_8, False)
     print(os.linesep)
 
-    print("AES output (128 bits) = AES_ls" + str(id) + "(" + str(i) +") (la_id" + str(id) + " || j)")
+    print("AES output (128 bits) = AES_ls" + str(id) + "(" + str(i) +") (la_id" + str(id) + " || j || 0^{80}) =")
     aes_out_j = aes_obj.encrypt(aes_in_j.decode('hex')).encode('hex')
     print("0x" + aes_out_j.upper())
     cArrayDef("", "aes_out"+ str(id) + "_" + str(i) + "_j", long(aes_out_j, 16), 128/8, radix_8, False)
@@ -76,13 +76,13 @@ def genlv(i, plv1_i_j, plv2_i_j):
     return lv_i_j
     
 
-print("LA1 ID (16 bits, padded to 32 bits) =")
+print("LA1 ID (16 bits) =")
 la_id1 = getrandbits(16)
-print(Hex(la_id1, radix_32) + os.linesep)
+print(Hex(la_id1, radix_16) + os.linesep)
 
-print("LA2 ID (16 bits, padded to 32 bits) =")
+print("LA2 ID (16 bits) =")
 la_id2 = getrandbits(16)
-print(Hex(la_id2, radix_32) + os.linesep)
+print(Hex(la_id2, radix_16) + os.linesep)
 
 print("""
 i = 0
