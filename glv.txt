@@ -1,8 +1,12 @@
 
+Test vectors for Group Linkage Values glv(i,j)
+for i = {0,1} and j randomly chosen 32-bit value
+================================================
+
 Note: the argument k is not included in the notation of gplv1(i,j,k), gs1(i,k),
       gplv2(i,j,k), gs2(i,k) and glv(i,j,k) below
       as it is not included in their computation
-    
+
 LA1 ID (16 bits) =
 0x8E09
 
@@ -18,7 +22,7 @@ ik: indices key shared between LA1 and LA2 (128 bits) =
 i = 0
 =====
 j is a randomly chosen 32-bit value
-    
+
 j (32 bits) =
 0x4840ED22
 
@@ -94,7 +98,7 @@ ei(j,k): Encrypted indices function = AES output XOR AES input (128 bits) =
 i = 1
 =====
 j is a randomly chosen 32-bit value
-    
+
 j (32 bits) =
 0x548F7017
 

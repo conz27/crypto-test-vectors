@@ -1,3 +1,8 @@
+
+Test vectors for Linkage Values lv(i,j)
+for i = {0,1} and j randomly chosen in [1,20]
+=============================================
+
 LA1 ID (16 bits) =
 0x8E09
 

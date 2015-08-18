@@ -81,6 +81,12 @@ def genlv(i, plv1_i_j, plv2_i_j, g=""):
     
 if __name__ == '__main__':
 
+    print("""
+Test vectors for Linkage Values lv(i,j)
+for i = {0,1} and j randomly chosen in [1,20]
+=============================================
+""")
+
     print("LA1 ID (16 bits) =")
     la_id1 = getrandbits(16)
     print(Hex(la_id1, radix_16) + os.linesep)

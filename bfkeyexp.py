@@ -53,6 +53,11 @@ j = randint(1,20)
 x_cert = (i * radix_32 + j) * radix_32
 x_enc = (((radix_32 - 1) * radix_32 + i) * radix_32 + j) * radix_32
 
+print("""
+Test vectors for Butterfly Expansion Function
+=============================================
+""")
+
 print("\"le\": little-endian")
 print("\"be\": big-endian")
 
