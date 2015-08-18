@@ -45,7 +45,8 @@ A = a*genP256
 h = randint(1, genP256.ecc.n-1)
 H = h*genP256
 
-k = "{0:032X}".format(getrandbits(128))
+ck = "{0:032X}".format(getrandbits(128))
+ek = "{0:032X}".format(getrandbits(128))
 i = randint(1, radix_32)
 j = randint(1,20)
 
@@ -58,10 +59,6 @@ print("\"be\": big-endian")
 print("Curve: NISTp256")
 print("---------------")
 
-print("AES key (128 bits, randomly generated):")
-print("0x" + k)
-cArrayDef("[be]", "k", long(k, 16), 128/8, radix_8, False); print(os.linesep)
-
 print("i (32 bits):")
 print(Hex(i, radix_32) + os.linesep)
 
@@ -70,6 +67,11 @@ print(Hex(j, radix_32) + os.linesep)
 
 print("Expanding Certificate key pair (a,A)")
 print("------------------------------------")
+
+print("ck: AES key (128 bits, randomly generated):")
+print("0x" + ck)
+cArrayDef("[be]", "ck", long(ck, 16), 128/8, radix_8, False); print(os.linesep)
+
 print("a: Signing seed private key (256 bits):")
 print(Hex(a, radix_256))
 cArrayDef("[le]", "a", a, 256/32, radix_32, True); print(os.linesep)
@@ -84,7 +86,7 @@ print("}" + os.linesep)
 print("x_cert: Expansion function input for Certificate keys (128 bits):")
 print(Hex(x_cert, radix_128) + os.linesep)
 
-f_k_int_x_cert = f_k_int_x(k, x_cert)
+f_k_int_x_cert = f_k_int_x(ck, x_cert)
 print("f_k^{int}(x) = block1 || block2 || block3 (384 bits):")
 print("0x" + f_k_int_x_cert)
 cArrayDef("[be]", "f_k_int_x_cert", long(f_k_int_x_cert, 16), 384/8, radix_8, False); print(os.linesep)
@@ -112,6 +114,11 @@ print("SUCCESS: Verified that expanded certificate private and public keys form 
 
 print("Expanding Encryption key pair (h,H)")
 print("-----------------------------------")
+
+print("ek: AES key (128 bits, randomly generated):")
+print("0x" + ek)
+cArrayDef("[be]", "ek", long(ek, 16), 128/8, radix_8, False); print(os.linesep)
+
 print("h: Signing seed private key (256 bits):")
 print(Hex(h, radix_256))
 cArrayDef("[le]", "h", h, 256/32, radix_32, True); print(os.linesep)
@@ -126,7 +133,7 @@ print("}" + os.linesep)
 print("x_enc: Expansion function input for Encryption keys (128 bits):")
 print(Hex(x_enc, radix_128) + os.linesep)
 
-f_k_int_x_enc = f_k_int_x(k, x_enc)
+f_k_int_x_enc = f_k_int_x(ek, x_enc)
 print("f_k^{int}(x) = block1 || block2 || block3 (384 bits):")
 print("0x" + f_k_int_x_enc)
 cArrayDef("[be]", "f_k_int_x_enc", long(f_k_int_x_enc, 16), 384/8, radix_8, False); print(os.linesep)
