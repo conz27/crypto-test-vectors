@@ -104,7 +104,7 @@ j (32 bits) =
 
 LA1
 ---
-SHA-256 input (128 bits) = la_id1 (16-bit) || gs1(0) (128-bit) || 0 (112-bit) = 
+SHA-256 input (256 bits) = la_id1 (16-bit) || gs1(0) (128-bit) || 0 (112-bit) = 
 0x8E096B71A7EB5755F16E89981D2189A6DAEA0000000000000000000000000000
  sha256_in1_1[32] = 
 { 0x8E, 0x09, 0x6B, 0x71, 0xA7, 0xEB, 0x57, 0x55, 0xF1, 0x6E, 0x89, 0x98, 0x1D, 0x21, 0x89, 0xA6, 
@@ -138,7 +138,7 @@ gplv1(1,j) = AES output XOR AES input (72 bits) =
 
 LA2
 ---
-SHA-256 input (128 bits) = la_id2 (16-bit) || gs2(0) (128-bit) || 0 (112-bit) = 
+SHA-256 input (256 bits) = la_id2 (16-bit) || gs2(0) (128-bit) || 0 (112-bit) = 
 0x59CECC4DB977F595AD233F0F4E65408D9A9C0000000000000000000000000000
  sha256_in2_1[32] = 
 { 0x59, 0xCE, 0xCC, 0x4D, 0xB9, 0x77, 0xF5, 0x95, 0xAD, 0x23, 0x3F, 0x0F, 0x4E, 0x65, 0x40, 0x8D, 

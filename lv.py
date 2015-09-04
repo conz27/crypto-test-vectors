@@ -28,7 +28,7 @@ def genls(id, i, la_id, ls_im1, prefix = "ls"):
         cArrayDef("", prefix + str(id) + "_" + str(i), long(ls_i, 16), 128/8, radix_8, False)
         print(os.linesep)
     else:
-        print("SHA-256 input (128 bits) = la_id" + str(id) + " (16-bit) || " + prefix + str(id) + "(" + str(i-1) +")" + " (128-bit) || 0 (112-bit) = ")
+        print("SHA-256 input (256 bits) = la_id" + str(id) + " (16-bit) || " + prefix + str(id) + "(" + str(i-1) +")" + " (128-bit) || 0 (112-bit) = ")
         sha256_in = "{0:040X}".format(((la_id << 128) + long(ls_im1, 16)) << 112)
         print("0x" + sha256_in)
         cArrayDef("", "sha256_in"+ str(id) + "_" + str(i), long(sha256_in, 16), 256/8, radix_8, False)
