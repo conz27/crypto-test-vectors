@@ -30,8 +30,8 @@ if __name__ == '__main__':
 
     print("""
 Test vectors for Group Linkage Values glv(i,j)
-for i = {0,1} and j randomly chosen 32-bit value
-================================================
+for i = {0,1} and j randomly chosen 32-bit value for test purposes
+==================================================================
 
 Note: the argument k is not included in the notation of gplv1(i,j,k), gs1(i,k),
       gplv2(i,j,k), gs2(i,k) and glv(i,j,k) below

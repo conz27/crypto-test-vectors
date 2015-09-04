@@ -63,7 +63,7 @@ def genplv(id, i, la_id, ls_i, j, prefix = "plv", keyname = "ls"):
     cArrayDef("", "aes_out"+ str(id) + "_" + str(i) + "_j", long(aes_out_j, 16), 128/8, radix_8, False)
     print(os.linesep)
 
-    print(prefix + str(id) + "(" + str(i) + ",j) = AES output XOR AES input (128 bits) = ")
+    print(prefix + str(id) + "(" + str(i) + ",j) = AES output XOR AES input (72 bits) = ")
     plv_i_j = (long(aes_in_j, 16) ^ long(aes_out_j, 16)) >> (128-72)
     print(Hex(plv_i_j, radix_72))
     cArrayDef("", prefix + str(id) + "_" + str(i) + "_j", plv_i_j, 72/8, radix_8, False)
@@ -84,8 +84,8 @@ if __name__ == '__main__':
 
     print("""
 Test vectors for Linkage Values lv(i,j)
-for i = {0,1} and j randomly chosen in [1,20]
-=============================================
+for i = {0,1} and j randomly chosen in [1,20] for test purposes
+===============================================================
 """)
 
     print("LA1 ID (16 bits) =")
