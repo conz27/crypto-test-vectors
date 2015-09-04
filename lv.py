@@ -11,6 +11,7 @@ from array import *
 from random import *
 
 radix_128 = 2**128
+radix_72 = 2**72
 radix_32 = 2**32
 radix_16 = 2**16
 radix_8  = 2**8
@@ -63,9 +64,9 @@ def genplv(id, i, la_id, ls_i, j, prefix = "plv", keyname = "ls"):
     print(os.linesep)
 
     print(prefix + str(id) + "(" + str(i) + ",j) = AES output XOR AES input (128 bits) = ")
-    plv_i_j = long(aes_in_j, 16) ^ long(aes_out_j, 16)
-    print(Hex(plv_i_j, radix_128))
-    cArrayDef("", prefix + str(id) + "_" + str(i) + "_j", plv_i_j, 128/8, radix_8, False)
+    plv_i_j = (long(aes_in_j, 16) ^ long(aes_out_j, 16)) >> (128-72)
+    print(Hex(plv_i_j, radix_72))
+    cArrayDef("", prefix + str(id) + "_" + str(i) + "_j", plv_i_j, 72/8, radix_8, False)
     print(os.linesep)
 
     return plv_i_j
@@ -73,8 +74,8 @@ def genplv(id, i, la_id, ls_i, j, prefix = "plv", keyname = "ls"):
 def genlv(i, plv1_i_j, plv2_i_j, g=""):
     print(g+"lv(" + str(i) + ",j) = " + g + "plv1(" + str(i) + ",j) XOR " + g + "plv2(" + str(i) + ",j)")
     lv_i_j = plv1_i_j ^ plv2_i_j
-    print(Hex(lv_i_j, radix_128))
-    cArrayDef("", g+"lv_" + str(i) +"_j", lv_i_j, 128/8, radix_8, False)
+    print(Hex(lv_i_j, radix_72))
+    cArrayDef("", g+"lv_" + str(i) +"_j", lv_i_j, 72/8, radix_8, False)
     print(os.linesep)
 
     return lv_i_j
