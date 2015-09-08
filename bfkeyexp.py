@@ -106,7 +106,7 @@ a_exp = (a + f_k_x_cert) % genP256.ecc.n
 print(Hex(a_exp, radix_256))
 cArrayDef("[le]", "a_exp", a_exp, 256/32, radix_32, True); print(os.linesep)
 
-print("A + f_k(x_cert)*G_P26 mod l: Expanded public key (256 bits)")
+print("A + f_k(x_cert)*G_P256 mod l: Expanded public key (256 bits)")
 A_exp = A + f_k_x_cert*genP256
 print(A_exp)
 print("[le] A_exp = {")
@@ -153,7 +153,7 @@ h_exp = (h + f_k_x_enc) % genP256.ecc.n
 print(Hex(h_exp, radix_256))
 cArrayDef("[le]", "h_exp", h_exp, 256/32, radix_32, True); print(os.linesep)
 
-print("H + f_k(x_enc)*G_P26 mod l: Expanded public key (256 bits)")
+print("H + f_k(x_enc)*G_P256 mod l: Expanded public key (256 bits)")
 H_exp = H + f_k_x_enc*genP256
 print(H_exp)
 print("[le] H_exp = {")

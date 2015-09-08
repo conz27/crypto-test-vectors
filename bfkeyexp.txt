@@ -96,7 +96,7 @@ a + f_k(x_cert) mod l: Expanded private key (256 bits)
 [le] a_exp[8] = 
 { 0x283D8CEE, 0x24A9BF67, 0x8C523978, 0x6AE367F8, 0x6FFA13B3, 0xFCBD6180, 0x3EA27B15, 0x4D2093ED }
 
-A + f_k(x_cert)*G_P26 mod l: Expanded public key (256 bits)
+A + f_k(x_cert)*G_P256 mod l: Expanded public key (256 bits)
 [0x2b18f3d93c4df3d9d1490e3a9ba5a0de9cfa73eddb95408bc1f2bf60cb3cf313L], [0x1a2ce511e0da86356329a5c22a36a8a53088dcb11a5a94fa903ef0087421666aL]
 [le] A_exp = {
 { 0xCB3CF313, 0xC1F2BF60, 0xDB95408B, 0x9CFA73ED, 0x9BA5A0DE, 0xD1490E3A, 0x3C4DF3D9, 0x2B18F3D9 }
@@ -189,7 +189,7 @@ h + f_k(x_enc) mod l: Expanded private key (256 bits)
 [le] h_exp[8] = 
 { 0x1E72A7B6, 0x010C1A61, 0xA28022C8, 0xC9EF9C2E, 0xE7D4039A, 0xBB8A8310, 0x7415EF1B, 0xE77A422D }
 
-H + f_k(x_enc)*G_P26 mod l: Expanded public key (256 bits)
+H + f_k(x_enc)*G_P256 mod l: Expanded public key (256 bits)
 [0xb568fd55a7114254118e7463e85459bdd3c091342625b4a929541151bb8286beL], [0xed8dbe22200353d316cc5c3d8f1f281d8bfb34a9e6e1dbfe2043d928c64b430bL]
 [le] H_exp = {
 { 0xBB8286BE, 0x29541151, 0x2625B4A9, 0xD3C09134, 0xE85459BD, 0x118E7463, 0xA7114254, 0xB568FD55 }
