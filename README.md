@@ -20,6 +20,12 @@ Butterfly Expansion Function
               Encryption key pairs  
 - bfkeyexp.py : Python script that generates the test vectors
 
+Key Derivation Function, KDF2 [IEEE-1363a, ANSI X9.63] with SHA-256
+-------------------------------------------------------------------
+- kdf.txt: ANSI X9.63 test vectors of KDF2 with SHA-256  
+- kdf.py : Python script that implements KDF2 and tests it against the test
+           vectors included
+
 ### Other files:
 - radix.py:  
 - array.py: utility scripts for printing the output  
