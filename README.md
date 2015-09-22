@@ -2,7 +2,9 @@ Crypto Test Vectors
 ===================
 
 This directory contains test vectors for the following functions as specified 
-[here](http://wiki.campllc.org/display/SP/Modifications+to+Crypto+Primitives+v0.2-2015-08-18):
+[here](http://wiki.campllc.org/display/SP/Modifications+to+Crypto+Primitives+v0.2-2015-08-18).
+Additionally there are test vectors for crypto functions needed for encryption
+and signing/verification.
 
 Linkage Values lv(i,j)
 ----------------------
@@ -25,6 +27,12 @@ Key Derivation Function, KDF2 [IEEE-1363a, ANSI X9.63] with SHA-256
 - kdf.txt: ANSI X9.63 test vectors of KDF2 with SHA-256  
 - kdf.py : Python script that implements KDF2 and tests it against the test
            vectors included
+
+Message Authentication Code, MAC1 (HMAC)[IEEE-1363a, ANSI X9.71, RFC 2104, 4231] with SHA-256
+---------------------------------------------------------------------------------------------
+- mac1.txt: RFC 4231 test vectors of HMAC-SHA-256  
+- mac1.py : Python script that implements HMAC-SHA-256 and tests it against the test
+            vectors included
 
 ### Other files:
 - radix.py:  
