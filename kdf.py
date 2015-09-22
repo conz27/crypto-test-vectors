@@ -1,7 +1,6 @@
 from __future__ import print_function
 import os
 from hashlib import sha256
-from random import *
 from math import ceil
 
 from array import *
@@ -12,12 +11,13 @@ radix_32 = 2**32
 radix_16 = 2**16
 radix_8  = 2**8
 
-#Uncomment the following to obtain different values every time this script is run
-seed(333)
-
 def sha256_kdf(ss, kdp, dl):
     '''
     This KDF is KDF2 [in IEEE 1363a, Section 13.2] with SHA-256.
+
+    KDF(SS, KDP) = Hash(SS || counter || KDP)
+    concatinating output blocks for counter in [1, ceil(dl/block_len)]
+
     Inputs:
     - ss:  {octet string} shared secret (hex encoded bytes)
     - kdp: {octet string} key derivation parameter (hex encoded bytes)
@@ -29,8 +29,8 @@ def sha256_kdf(ss, kdp, dl):
 
     assert dl >= 0, 'dl should be positive integer'
 
-    hash_blk_len = 256/8
-    num_blk_out = int(ceil(dl/float(hash_blk_len)))
+    sha256_blk_len = 256/8
+    num_blk_out = int(ceil(dl/float(sha256_blk_len)))
 
     kdf_out = ''
     for i in range(1, num_blk_out+1):
@@ -79,6 +79,8 @@ known_key4 = "c0bd9e38a8f9de14c2acd35b2f3410c6988cf02400543631e0d6a4c1d030365acb
 print("""
 Test vectors for KDF2
 =====================
+Inputs: shared secret (ss), key derivation parameter (kdp), desired octet string length (dl)
+Output: derived key of length dl octets
 """)
 
 ss_list  = [known_ss1, known_ss2, known_ss3, known_ss4]
@@ -93,7 +95,6 @@ for ss, kdp, key in zip(ss_list, kdp_list, key_list):
 
     print("Test Vector #" + str(i) + ":")
     print("---------------")
-    print("Inputs: shared secret (ss), key derivation parameter (kdp), desired octet string length (dl)")
     # print shared secret
     print("ss = 0x" + ss)
     cArrayDef("", "ss", long(ss, 16), len(ss)/(2*8), radix_8, False); print(os.linesep)
