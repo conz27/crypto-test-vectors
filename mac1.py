@@ -135,14 +135,14 @@ for key, msg, tag in zip(key_list, msg_list, tag_list):
 
     # print key
     print("K = 0x" + key)
-    cArrayDef("", "key", long(key, 16), len(key)/(2*8), radix_8, False); print(os.linesep)
+    cArrayDef("", "key", long(key, 16), len(key)/2, radix_8, False); print(os.linesep)
     
     #print msg
     print("M = 0x" + msg)
-    cArrayDef("", "msg", long(msg, 16), len(msg)/(2*8), radix_8, False); print(os.linesep)
+    cArrayDef("", "msg", long(msg, 16), len(msg)/2, radix_8, False); print(os.linesep)
 
     #print msg
     print("T = 0x" + tag)
-    cArrayDef("", "tag", long(tag, 16), len(tag)/(2*8), radix_8, False); print(os.linesep)
+    cArrayDef("", "tag", long(tag, 16), len(tag)/2, radix_8, False); print(os.linesep)
 
     i += 1
