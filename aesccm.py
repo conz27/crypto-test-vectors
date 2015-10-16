@@ -32,7 +32,7 @@ def aes_ccm_enc(key, nonce, msg):
     key_len = 128/8
     tag_len = 16
     nonce_len = 12
-    assert len(nonce) <= nonce_len*2, "nonce must be of length less than or equal to 12 octets"
+    assert len(nonce) == nonce_len*2, "nonce must be of length 12 octets"
     assert len(key) == key_len*2, "key must be of length 16 octets"
     msg_len_len = 15 - nonce_len
     msg_blk_len = (len(msg)/2) / aes128_blk_len    # not counting the last non-full block, if any
@@ -68,7 +68,7 @@ def aes_ccm_enc(key, nonce, msg):
 
     B_0_0 ="{0:02X}".format( (((tag_len - 2)/2) << 3) | (msg_len_len - 1) )
     nonce_padded = "{0:0>{width}}".format(nonce, width=nonce_len*2)
-    msg_len = "{0:0{width}X}".format(len(msg)/2, width=msg_len_len*2)
+    msg_len = "{0:0>{width}X}".format(len(msg)/2, width=msg_len_len*2)
     B_0 = B_0_0 + nonce_padded + msg_len
     
     X = aes.encrypt(B_0.decode('hex')).encode('hex')
@@ -264,7 +264,6 @@ for key, nonce, pt in zip(key_list, nnc_list, pt_list):
 
     #print ciphertext || tag
     print("C_T = 0x" + c_t)
-    print("len(c_t): " + str(len(c_t)/2))
     cArrayDef("", "c_t", long(c_t, 16), len(c_t)/2, radix_8, False); print(os.linesep)
 
     i += 1
