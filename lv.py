@@ -2,7 +2,7 @@
 # This script generates test vectors for linkage values lv(i,j)
 # for i = {0,1} and j randomly chosen in [1,20]
 #####
-from __future__ import print_function
+
 import os
 from Crypto.Cipher import AES
 from hashlib import sha256
@@ -25,25 +25,25 @@ def genls(id, i, la_id, ls_im1, prefix = "ls"):
         print(prefix + str(id) + "(0) = AES key (128 bits) = randomly generated 128 bits for every device")
         ls_i = "{0:032X}".format(getrandbits(128))
         print("0x" + ls_i)
-        cArrayDef("", prefix + str(id) + "_" + str(i), long(ls_i, 16), 128/8, radix_8, False)
+        cArrayDef("", prefix + str(id) + "_" + str(i), int(ls_i, 16), 128/8, radix_8, False)
         print(os.linesep)
     else:
         print("SHA-256 input (256 bits) = la_id" + str(id) + " (16-bit) || " + prefix + str(id) + "(" + str(i-1) +")" + " (128-bit) || 0 (112-bit) = ")
-        sha256_in = "{0:040X}".format(((la_id << 128) + long(ls_im1, 16)) << 112)
+        sha256_in = "{0:040X}".format(((la_id << 128) + int(ls_im1, 16)) << 112)
         print("0x" + sha256_in)
-        cArrayDef("", "sha256_in"+ str(id) + "_" + str(i), long(sha256_in, 16), 256/8, radix_8, False)
+        cArrayDef("", "sha256_in"+ str(id) + "_" + str(i), int(sha256_in, 16), 256/8, radix_8, False)
         print(os.linesep)
 
         print("SHA-256 output (256 bits) = SHA-256(la_id" + str(id) + " || " + prefix + str(id) + "(" + str(i-1) +")) || 0^{112}) =")
         sha256_out = sha256(sha256_in.decode('hex')).hexdigest()
         print("0x" + sha256_out)
-        cArrayDef("", "sha256_out"+ str(id) + "_" + str(i), long(sha256_out, 16), 256/8, radix_8, False)
+        cArrayDef("", "sha256_out"+ str(id) + "_" + str(i), int(sha256_out, 16), 256/8, radix_8, False)
         print(os.linesep)
 
         print(prefix + str(id) + "(" + str(i) +") = AES key (128 bits) = first 128 bits of SHA-256(la_id" + str(id) + " || " + prefix + str(id) + "(" + str(i-1) +")) =")
-        ls_i = "{0:032x}".format(long(sha256_out, 16) >> 128)
+        ls_i = "{0:032x}".format(int(sha256_out, 16) >> 128)
         print("0x" + ls_i)
-        cArrayDef("", prefix + str(id)  + "_" + str(i), long(ls_i, 16), 128/8, radix_8, False)
+        cArrayDef("", prefix + str(id)  + "_" + str(i), int(ls_i, 16), 128/8, radix_8, False)
         print(os.linesep)
 
     return ls_i
@@ -54,17 +54,17 @@ def genplv(id, i, la_id, ls_i, j, prefix = "plv", keyname = "ls"):
     print("AES input plaintext (128 bits) = la_id" + str(id) + " (16-bit) || j (32-bit) || 0 (80-bit) = ")
     aes_in_j = "{0:032X}".format((la_id * radix_32 + j) << 80)
     print("0x" + aes_in_j)
-    cArrayDef("", "aes_in"+ str(id) + "_j", long(aes_in_j, 16), 128/8, radix_8, False)
+    cArrayDef("", "aes_in"+ str(id) + "_j", int(aes_in_j, 16), 128/8, radix_8, False)
     print(os.linesep)
 
     print("AES output (128 bits) = AES_" + keyname + str(id) + "(" + str(i) +") (la_id" + str(id) + " || j || 0^{80}) =")
     aes_out_j = aes_obj.encrypt(aes_in_j.decode('hex')).encode('hex')
     print("0x" + aes_out_j.upper())
-    cArrayDef("", "aes_out"+ str(id) + "_" + str(i) + "_j", long(aes_out_j, 16), 128/8, radix_8, False)
+    cArrayDef("", "aes_out"+ str(id) + "_" + str(i) + "_j", int(aes_out_j, 16), 128/8, radix_8, False)
     print(os.linesep)
 
     print(prefix + str(id) + "(" + str(i) + ",j) = AES output XOR AES input (72 bits) = ")
-    plv_i_j = (long(aes_in_j, 16) ^ long(aes_out_j, 16)) >> (128-72)
+    plv_i_j = (int(aes_in_j, 16) ^ int(aes_out_j, 16)) >> (128-72)
     print(Hex(plv_i_j, radix_72))
     cArrayDef("", prefix + str(id) + "_" + str(i) + "_j", plv_i_j, 72/8, radix_8, False)
     print(os.linesep)

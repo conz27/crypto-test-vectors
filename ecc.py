@@ -68,10 +68,10 @@ def sqrt(a, m):
 
 def inthex_to_long(x):
    'Basic function to convert Int or String to Int'
-   if type(x) is long or type(x) is int:
-      return long(x)
+   if type(x) is int or type(x) is int:
+      return int(x)
    elif type(x) is StringType:
-      return long(x, 16)
+      return int(x, 16)
 
 #
 # ECC curve class
@@ -155,8 +155,8 @@ class ECPoint:
             ec_pointj = args[0]
             self.ecc  = ec_pointj.ecc
             if(ec_pointj.is_infinity()):
-               self.x = long(0)
-               self.y = long(0)
+               self.x = int(0)
+               self.y = int(0)
             else: # Convert to Affine from Jacobian
                zinv = modinv(ec_pointj.z, self.ecc.p)
                self.x = (ec_pointj.x * zinv**2) % self.ecc.p
@@ -200,7 +200,7 @@ class ECPoint:
          raise Exception("Operand on the right is not ECPoint type!")
       return self.add(-right)
    def __rmul__(self,left):
-      if type(left) not in (int,long):
+      if type(left) not in (int,int):
          raise Exception("Operand on the left is not integer type!")
 #      return self.multiply(left)   # switched to Jacobian version
       return self.multiplyJ(left)
@@ -257,7 +257,7 @@ class ECPoint:
       if (bl == 1):
          return self
       acc = self
-      for i in reversed(range(bl-1)):
+      for i in reversed(list(range(bl-1))):
          acc = acc + acc
          if(testBit(k,i) != 0):
             acc = acc + self
@@ -271,7 +271,7 @@ class ECPoint:
       if (bl == 1):
          return self
       acc = ECPointJ(self)
-      for i in reversed(range(bl-1)):
+      for i in reversed(list(range(bl-1))):
          acc = acc.double()
          if(testBit(k,i) != 0):
             acc = acc + self
@@ -301,7 +301,7 @@ class ECPoint:
          flag = os[0:2]
          if (flag != "02" and flag != "03"):
             raise Exception("Bad octet string flag!")
-         self.x = long(os[2:(2+os_len)], 16)
+         self.x = int(os[2:(2+os_len)], 16)
          self.y = (self.x**3 + self.ecc.a * self.x + self.ecc.b) % self.ecc.p
          self.y = sqrt(self.y, self.ecc.p);
          if((testBit(self.y,0) != 0 and flag == "02") or (testBit(self.y,0) == 0 and flag == "03")):
@@ -314,8 +314,8 @@ class ECPoint:
          flag = os[0:2]
          if (flag != "04"):
             raise Exception("Bad octet string flag!")
-         self.x = long(os[2:(2+os_len)], 16)
-         self.y = long(os[(2+os_len):(2+2*os_len)], 16)
+         self.x = int(os[2:(2+os_len)], 16)
+         self.y = int(os[(2+os_len):(2+2*os_len)], 16)
          self.is_on_curve()
          return self;
  
@@ -342,13 +342,13 @@ class ECPointJ:
             ec_point = args[0]
             self.ecc = ec_point.ecc
             if(ec_point.is_infinity()):
-               self.x = long(1)
-               self.y = long(1)
-               self.z = long(0)
+               self.x = int(1)
+               self.y = int(1)
+               self.z = int(0)
             else:
                self.x = ec_point.x % self.ecc.p
                self.y = ec_point.y % self.ecc.p
-               self.z = long(1)
+               self.z = int(1)
                self.is_on_curve()
       elif(len(args) == 3 or len(args) == 4):
          if (len(args) == 4):
@@ -527,7 +527,7 @@ class ECPointJ:
 class ECDSA:
    'Class for ECDSA algorithm'
    'Two argument options: (dgst_bitlen, pub_key, prv_key), or (dgst_bitlen, pub_key)'
-   def __init__(self, dgst_bitlen, pub_key, prv_key = 0L):
+   def __init__(self, dgst_bitlen, pub_key, prv_key = 0):
       if(isinstance(pub_key,ECPoint)):
          self.dgst_bitlen = dgst_bitlen
          self.ecc = pub_key.ecc
@@ -539,7 +539,7 @@ class ECDSA:
             self.shr_dgst = self.dgst_bitlen - self.n_bitlen
       else:
          raise Exception("ECPoint expected (not found)!")
-      if(prv_key != 0L):
+      if(prv_key != 0):
          self.prv_key = inthex_to_long(prv_key) % self.ecc.p
          # Check that private key and public keys match
          genP = ECPoint(self.ecc.gx, self.ecc.gy, self.ecc)
@@ -805,7 +805,7 @@ if __name__ == '__main__':
    if (r_v != r or s_v != s):
       raise Exception("Signature does not match vector: FAILURE")
 
-   print "Passed!"
+   print("Passed!")
 
 
 

@@ -9,7 +9,7 @@ radix_8 = 2**8
 genP256 = ECPoint(secp256r1.gx, secp256r1.gy, secp256r1)
 
 def ecdh(a, B):
-    a = long(a, 16)
+    a = int(a, 16)
     aB = a*B
     Z = aB.x
     ss = "{0:0>{width}X}".format(Z, width=bitLen(B.ecc.n)/4).upper()
@@ -241,23 +241,23 @@ for Ad, Bx, By, Zi in zip(Ad_lst, Bx_lst, By_lst, Z_lst):
     Zi_str = "{0:0>{width}X}".format(Zi, width=bitLen(genP256.ecc.n)/4)
     assert Z == Zi_str.upper(), "Shared secret does not match test vector"
 
-    print("Test Vector #" + str(i) + ":")
+    print(("Test Vector #" + str(i) + ":"))
     print("---------------")
 
     # print a
-    print("a = 0x" + a)
-    cArrayDef("", "a", long(a, 16), len(a)/2, radix_8, False); print(os.linesep)
+    print(("a = 0x" + a))
+    cArrayDef("", "a", int(a, 16), len(a)/2, radix_8, False); print((os.linesep))
     
     #print B.x
-    print("Bx = " + Hex(Bx, radix_256))
-    cArrayDef("", "Bx", Bx, 256/8, radix_8, False); print(os.linesep)
+    print(("Bx = " + Hex(Bx, radix_256)))
+    cArrayDef("", "Bx", Bx, 256/8, radix_8, False); print((os.linesep))
 
     #print B.y
-    print("By = " + Hex(By, radix_256))
-    cArrayDef("", "By", By, 256/8, radix_8, False); print(os.linesep)
+    print(("By = " + Hex(By, radix_256)))
+    cArrayDef("", "By", By, 256/8, radix_8, False); print((os.linesep))
 
     # print Z
-    print("Z = 0x" + Z)
-    cArrayDef("", "Z", long(Z, 16), len(Z)/2, radix_8, False); print(os.linesep)
+    print(("Z = 0x" + Z))
+    cArrayDef("", "Z", int(Z, 16), len(Z)/2, radix_8, False); print((os.linesep))
 
     i += 1

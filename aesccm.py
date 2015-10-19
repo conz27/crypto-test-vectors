@@ -1,4 +1,4 @@
-from __future__ import print_function
+
 import os
 from Crypto.Cipher import AES
 
@@ -74,13 +74,13 @@ def aes_ccm_enc(key, nonce, msg):
     X = aes.encrypt(B_0.decode('hex')).encode('hex')
     for i in range(1, msg_blk_len+1):
         B_i = msg[(i-1)*aes128_blk_len*2:i*aes128_blk_len*2]
-        xor_out = "{0:0{width}X}".format((long(B_i, 16) ^ long(X, 16)), width=aes128_blk_len*2)
+        xor_out = "{0:0{width}X}".format((int(B_i, 16) ^ int(X, 16)), width=aes128_blk_len*2)
         X = aes.encrypt(xor_out.decode('hex')).encode('hex')
 
     # handling the last block
     if (last_bytes):
         B_i = "{0:0<{width}}".format(msg[(msg_blk_len)*aes128_blk_len*2:len(msg)], width=aes128_blk_len*2)
-        xor_out = "{0:0{width}X}".format((long(B_i, 16) ^ long(X, 16)), width=aes128_blk_len*2)
+        xor_out = "{0:0{width}X}".format((int(B_i, 16) ^ int(X, 16)), width=aes128_blk_len*2)
         X = aes.encrypt(xor_out.decode('hex')).encode('hex')
     # T := X[:tag_len*2]
     # Authentication tag T is the same length as AES block here so no truncation needed
@@ -111,7 +111,7 @@ def aes_ccm_enc(key, nonce, msg):
     A_0 = A_0_0 + nonce_padded + counter
 
     S_0 = aes.encrypt(A_0.decode('hex')).encode('hex')
-    U = "{0:0{width}X}".format((long(X, 16) ^ long(S_0, 16)), width=aes128_blk_len*2)
+    U = "{0:0{width}X}".format((int(X, 16) ^ int(S_0, 16)), width=aes128_blk_len*2)
     U = U[:tag_len*2]
 
     C = ""
@@ -120,7 +120,7 @@ def aes_ccm_enc(key, nonce, msg):
         A_i = A_0_0 + nonce_padded + counter
         S_i = aes.encrypt(A_i.decode('hex')).encode('hex')
         B_i = msg[(i-1)*aes128_blk_len*2:i*aes128_blk_len*2]
-        C_i = "{0:0{width}X}".format((long(B_i, 16) ^ long(S_i, 16)), width=aes128_blk_len*2)
+        C_i = "{0:0{width}X}".format((int(B_i, 16) ^ int(S_i, 16)), width=aes128_blk_len*2)
         C  += C_i
     # handling the last block
     if (last_bytes):
@@ -128,7 +128,7 @@ def aes_ccm_enc(key, nonce, msg):
         A_i = A_0_0 + nonce_padded + counter
         S_i = aes.encrypt(A_i.decode('hex')).encode('hex')
         B_i = "{0:0<{width}}".format(msg[(msg_blk_len)*aes128_blk_len*2:len(msg)], width=aes128_blk_len*2)
-        C_i = "{0:0{width}X}".format((long(B_i, 16) ^ long(S_i, 16)), width=aes128_blk_len*2)
+        C_i = "{0:0{width}X}".format((int(B_i, 16) ^ int(S_i, 16)), width=aes128_blk_len*2)
         C_i = C_i[:last_bytes*2]
         C  += C_i
 
@@ -162,7 +162,7 @@ def aes_ccm_dec(key, nonce, ctxt):
     # Decrypting authentication tag:
     # First block of key stream is XORed with the encrypted tag, U, the last blob of the ciphertext
     S_0 = aes.encrypt(A_0.decode('hex')).encode('hex')
-    T = "{0:0{width}X}".format((long(U, 16) ^ long(S_0, 16)), width=aes128_blk_len*2)
+    T = "{0:0{width}X}".format((int(U, 16) ^ int(S_0, 16)), width=aes128_blk_len*2)
     T = T[:tag_len*2]
 
     # Decrypting ciphertext
@@ -172,7 +172,7 @@ def aes_ccm_dec(key, nonce, ctxt):
         A_i = A_0_0 + nonce_padded + counter
         S_i = aes.encrypt(A_i.decode('hex')).encode('hex')
         C_i = ciphertxt[(i-1)*aes128_blk_len*2:i*aes128_blk_len*2]
-        P_i = "{0:0{width}X}".format((long(C_i, 16) ^ long(S_i, 16)), width=aes128_blk_len*2)
+        P_i = "{0:0{width}X}".format((int(C_i, 16) ^ int(S_i, 16)), width=aes128_blk_len*2)
         P  += P_i
     # handling the last block
     if (last_bytes):
@@ -180,7 +180,7 @@ def aes_ccm_dec(key, nonce, ctxt):
         A_i = A_0_0 + nonce_padded + counter
         S_i = aes.encrypt(A_i.decode('hex')).encode('hex')
         C_i = "{0:0<{width}}".format(ciphertxt[(ciphertxt_blk_len)*aes128_blk_len*2:len(ciphertxt)], width=aes128_blk_len*2)
-        P_i = "{0:0{width}X}".format((long(C_i, 16) ^ long(S_i, 16)), width=aes128_blk_len*2)
+        P_i = "{0:0{width}X}".format((int(C_i, 16) ^ int(S_i, 16)), width=aes128_blk_len*2)
         P_i = P_i[:last_bytes*2]
         P  += P_i
 
@@ -193,13 +193,13 @@ def aes_ccm_dec(key, nonce, ctxt):
     X = aes.encrypt(B_0.decode('hex')).encode('hex')
     for i in range(1, ciphertxt_blk_len+1):
         B_i = P[(i-1)*aes128_blk_len*2:i*aes128_blk_len*2]
-        xor_out = "{0:0{width}X}".format((long(B_i, 16) ^ long(X, 16)), width=aes128_blk_len*2)
+        xor_out = "{0:0{width}X}".format((int(B_i, 16) ^ int(X, 16)), width=aes128_blk_len*2)
         X = aes.encrypt(xor_out.decode('hex')).encode('hex')
 
     # handling the last block
     if (last_bytes):
         B_i = "{0:0<{width}}".format(P[(ciphertxt_blk_len)*aes128_blk_len*2:len(ciphertxt)], width=aes128_blk_len*2)
-        xor_out = "{0:0{width}X}".format((long(B_i, 16) ^ long(X, 16)), width=aes128_blk_len*2)
+        xor_out = "{0:0{width}X}".format((int(B_i, 16) ^ int(X, 16)), width=aes128_blk_len*2)
         X = aes.encrypt(xor_out.decode('hex')).encode('hex')
 
     if (T.upper() != X[:tag_len*2].upper()):
@@ -252,18 +252,18 @@ for key, nonce, pt in zip(key_list, nnc_list, pt_list):
 
     # print key
     print("K = 0x" + key)
-    cArrayDef("", "key", long(key, 16), len(key)/2, radix_8, False); print(os.linesep)
+    cArrayDef("", "key", int(key, 16), len(key)/2, radix_8, False); print(os.linesep)
     
     #print nonce
     print("N = 0x" + nonce)
-    cArrayDef("", "nonce", long(nonce, 16), len(nonce)/2, radix_8, False); print(os.linesep)
+    cArrayDef("", "nonce", int(nonce, 16), len(nonce)/2, radix_8, False); print(os.linesep)
 
     #print plaintext
     print("P = 0x" + pt)
-    cArrayDef("", "pt", long(pt, 16), len(pt)/2, radix_8, False); print(os.linesep)
+    cArrayDef("", "pt", int(pt, 16), len(pt)/2, radix_8, False); print(os.linesep)
 
     #print ciphertext || tag
     print("C_T = 0x" + c_t)
-    cArrayDef("", "c_t", long(c_t, 16), len(c_t)/2, radix_8, False); print(os.linesep)
+    cArrayDef("", "c_t", int(c_t, 16), len(c_t)/2, radix_8, False); print(os.linesep)
 
     i += 1

@@ -1,4 +1,4 @@
-from __future__ import print_function
+
 import os
 from hashlib import sha256
 from math import ceil
@@ -97,14 +97,14 @@ for ss, kdp, key in zip(ss_list, kdp_list, key_list):
     print("---------------")
     # print shared secret
     print("ss = 0x" + ss)
-    cArrayDef("", "ss", long(ss, 16), len(ss)/2, radix_8, False); print(os.linesep)
+    cArrayDef("", "ss", int(ss, 16), len(ss)/2, radix_8, False); print(os.linesep)
     
     #print key derivation parameter
     if (kdp == ""):
         print("kdp = \"\""); print()
     else:
         print("kdp = 0x" + kdp)
-        cArrayDef("", "kdp", long(kdp, 16), len(kdp)/2, radix_8, False); print(os.linesep)
+        cArrayDef("", "kdp", int(kdp, 16), len(kdp)/2, radix_8, False); print(os.linesep)
 
     #print desired length
     print("dl = " + str(dl) + " octets"); print(os.linesep)

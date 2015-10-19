@@ -1,4 +1,4 @@
-from __future__ import print_function
+
 import os
 from hashlib import sha256
 import hmac
@@ -45,13 +45,13 @@ def sha256_hmac(key, msg):
 
     ipad = "36"*sha256_in_blk_len
     #print("ipad:         " + ipad)
-    key_xor_ipad = long(key, 16) ^ long(ipad,16)
+    key_xor_ipad = int(key, 16) ^ int(ipad,16)
     key_xor_ipad = "{0:0128x}".format(key_xor_ipad)
     #print("key_xor_ipad: " + key_xor_ipad)
 
     opad = "5C"*sha256_in_blk_len
     #print("opad:         " + opad)
-    key_xor_opad = long(key, 16) ^ long(opad,16)
+    key_xor_opad = int(key, 16) ^ int(opad,16)
     key_xor_opad = "{0:0128x}".format(key_xor_opad)
     #print("key_xor_opad: " + key_xor_opad)
 
@@ -135,14 +135,14 @@ for key, msg, tag in zip(key_list, msg_list, tag_list):
 
     # print key
     print("K = 0x" + key)
-    cArrayDef("", "key", long(key, 16), len(key)/2, radix_8, False); print(os.linesep)
+    cArrayDef("", "key", int(key, 16), len(key)/2, radix_8, False); print(os.linesep)
     
     #print msg
     print("M = 0x" + msg)
-    cArrayDef("", "msg", long(msg, 16), len(msg)/2, radix_8, False); print(os.linesep)
+    cArrayDef("", "msg", int(msg, 16), len(msg)/2, radix_8, False); print(os.linesep)
 
     #print msg
     print("T = 0x" + tag)
-    cArrayDef("", "tag", long(tag, 16), len(tag)/2, radix_8, False); print(os.linesep)
+    cArrayDef("", "tag", int(tag, 16), len(tag)/2, radix_8, False); print(os.linesep)
 
     i += 1
