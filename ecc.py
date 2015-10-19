@@ -10,34 +10,34 @@ from hashlib import *
 # bitLen() returns a length of the number in bits
 def bitLen(int_type):
     length = 0
-    while (int_type):
+    while int_type:
         int_type >>= 1
         length += 1
-    return (length)
+    return length
 
 
 # testBit() returns a nonzero result, 2**offset, if the bit at 'offset' is one.
 def testBit(int_type, offset):
     mask = 1 << offset
-    return (int_type & mask)
+    return int_type & mask
 
 
 # setBit() returns an integer with the bit at 'offset' set to 1.
 def setBit(int_type, offset):
     mask = 1 << offset
-    return (int_type | mask)
+    return int_type | mask
 
 
 # clearBit() returns an integer with the bit at 'offset' cleared.
 def clearBit(int_type, offset):
     mask = ~(1 << offset)
-    return (int_type & mask)
+    return int_type & mask
 
 
 # toggleBit() returns an integer with the bit at 'offset' inverted, 0 -> 1 and 1 -> 0.
 def toggleBit(int_type, offset):
     mask = 1 << offset
-    return (int_type ^ mask)
+    return int_type ^ mask
 
 
 #
@@ -46,10 +46,10 @@ def toggleBit(int_type, offset):
 
 def egcd(a, b):
     if a == 0:
-        return (b, 0, 1)
+        return b, 0, 1
     else:
         g, y, x = egcd(b % a, a)
-        return (g, x - (b // a) * y, y)
+        return g, x - (b // a) * y, y
 
 
 def modinv(a, m):
@@ -165,19 +165,19 @@ class ECPoint:
     '  0 - ECPoint (nothing else), 1 - ECPointJ (nothing else), 2 - x,y,[curve-optional]'
 
     def __init__(self, *args, **kwargs):
-        if (len(args) == 1):
-            if (isinstance(args[0], ECPoint)):
+        if len(args) == 1:
+            if isinstance(args[0], ECPoint):
                 ec_point = args[0]
                 self.ecc = ec_point.ecc
                 self.x = ec_point.x % self.ecc.p
                 self.y = ec_point.y % self.ecc.p
                 # Do not check of point is on the curve when it's point at infinity
-                if (not self.is_infinity()):
+                if not self.is_infinity():
                     self.is_on_curve()
-            elif (isinstance(args[0], ECPointJ)):
+            elif isinstance(args[0], ECPointJ):
                 ec_pointj = args[0]
                 self.ecc = ec_pointj.ecc
-                if (ec_pointj.is_infinity()):
+                if ec_pointj.is_infinity():
                     self.x = int(0)
                     self.y = int(0)
                 else:  # Convert to Affine from Jacobian
@@ -185,26 +185,26 @@ class ECPoint:
                     self.x = (ec_pointj.x * zinv ** 2) % self.ecc.p
                     self.y = (ec_pointj.y * zinv ** 3) % self.ecc.p
                     self.is_on_curve()
-        elif (len(args) == 2 or len(args) == 3):
+        elif len(args) == 2 or len(args) == 3:
             # Octet string converion case
-            if (isinstance(args[0], ECurve)):
+            if isinstance(args[0], ECurve):
                 self.ecc = args[0]
                 self.input(args[1])
                 return
-            if (len(args) == 3):
+            if len(args) == 3:
                 self.ecc = args[2]
             else:
                 self.ecc = secp256r1  # default curve
             self.x = inthex_to_long(args[0]) % self.ecc.p
             self.y = inthex_to_long(args[1]) % self.ecc.p
             # Do not check of point is on the curve when it's point at infinity
-            if (not self.is_infinity()):
+            if not self.is_infinity():
                 self.is_on_curve()
         else:
             raise Exception("Bad parameters in ECPoint constructor!")
 
     def __cmp__(self, b):
-        if (self.x == b.x and self.y == b.y):
+        if self.x == b.x and self.y == b.y:
             return 0
         else:
             return 1
@@ -238,29 +238,29 @@ class ECPoint:
 
     def is_on_curve(self):
         'Checking that (x,y) is on the curve: y^2 = x^3 + a*x + b'
-        if (not ((self.y ** 2 - self.x ** 3 - self.ecc.a * self.x - self.ecc.b) % self.ecc.p) == 0):
+        if not ((self.y ** 2 - self.x ** 3 - self.ecc.a * self.x - self.ecc.b) % self.ecc.p) == 0:
             raise Exception("Point is not on the curve!\n" + str(self))
         return True
 
     def is_infinity(self):
         'Checking that (x,y) is infinity - (0,0)'
-        if (self.x == 0 and self.y == 0):
+        if self.x == 0 and self.y == 0:
             return True
 
     def add(self, b):
         'Point addition: x3 = lmb^2 - x1 - x2,  y3 = lmb * (x2 - x3) - y2'
         '                where lmb = (y2-y1)/(x2-x1)'
-        if (self.ecc != b.ecc):
+        if self.ecc != b.ecc:
             raise Exception("Different curves for input points! " + str(self.ecc) + ", " + str(b.ecc))
-        if (self.is_infinity()):
+        if self.is_infinity():
             return b
-        if (b.is_infinity()):
+        if b.is_infinity():
             return self
         self.is_on_curve()
         b.is_on_curve()
-        if (self == b):
+        if self == b:
             return self.double()
-        if (self == -b):
+        if self == -b:
             return ECPoint(0, 0, self.ecc)
         lmb = ((b.y - self.y) * modinv(b.x - self.x, self.ecc.p)) % self.ecc.p
         x3 = lmb ** 2 - self.x - b.x
@@ -270,7 +270,7 @@ class ECPoint:
     def double(self):
         'Point doubling: x3 = t^2 - 2*x,  y3 = t * (x - x3) - y'
         '                where t = (3*x+a)/(2y)'
-        if (self.is_infinity()):
+        if self.is_infinity():
             return self
         self.is_on_curve()
         t = ((3 * self.x ** 2 + self.ecc.a) * modinv(2 * self.y, self.ecc.p)) % self.ecc.p
@@ -281,28 +281,28 @@ class ECPoint:
     def multiply(self, scalar):
         k = inthex_to_long(scalar) % self.ecc.n
         bl = bitLen(k)
-        if (bl == 0):
+        if bl == 0:
             return ECPoint(0, 0, self.ecc)
-        if (bl == 1):
+        if bl == 1:
             return self
         acc = self
         for i in reversed(list(range(bl - 1))):
             acc = acc + acc
-            if (testBit(k, i) != 0):
+            if testBit(k, i) != 0:
                 acc = acc + self
         return acc
 
     def multiplyJ(self, scalar):
         k = inthex_to_long(scalar) % self.ecc.n
         bl = bitLen(k)
-        if (bl == 0):
+        if bl == 0:
             return ECPoint(0, 0, self.ecc)
-        if (bl == 1):
+        if bl == 1:
             return self
         acc = ECPointJ(self)
         for i in reversed(list(range(bl - 1))):
             acc = acc.double()
-            if (testBit(k, i) != 0):
+            if testBit(k, i) != 0:
                 acc = acc + self
         return ECPoint(acc)
 
@@ -311,8 +311,8 @@ class ECPoint:
         self.is_on_curve()
         l = bitLen(self.ecc.p)
         os_len = 2 * ((l - 1) / 8 + 1)
-        if (compress):
-            if (testBit(self.y, 0) != 0):
+        if compress:
+            if testBit(self.y, 0) != 0:
                 flag = "03"
             else:
                 flag = "02"
@@ -325,22 +325,22 @@ class ECPoint:
         l = bitLen(self.ecc.p)
         os_len = 2 * ((l - 1) / 8 + 1)
         # Compressed
-        if (os_len == (len(os) - 2)):
+        if os_len == (len(os) - 2):
             flag = os[0:2]
-            if (flag != "02" and flag != "03"):
+            if flag != "02" and flag != "03":
                 raise Exception("Bad octet string flag!")
             self.x = int(os[2:(2 + os_len)], 16)
             self.y = (self.x ** 3 + self.ecc.a * self.x + self.ecc.b) % self.ecc.p
             self.y = sqrt(self.y, self.ecc.p);
-            if ((testBit(self.y, 0) != 0 and flag == "02") or (testBit(self.y, 0) == 0 and flag == "03")):
+            if (testBit(self.y, 0) != 0 and flag == "02") or (testBit(self.y, 0) == 0 and flag == "03"):
                 self.y = self.ecc.p - self.y
             self.is_on_curve()
             return self;
 
         # Uncompressed
-        elif ((2 * os_len) == (len(os) - 2)):
+        elif (2 * os_len) == (len(os) - 2):
             flag = os[0:2]
-            if (flag != "04"):
+            if flag != "04":
                 raise Exception("Bad octet string flag!")
             self.x = int(os[2:(2 + os_len)], 16)
             self.y = int(os[(2 + os_len):(2 + 2 * os_len)], 16)
@@ -358,20 +358,20 @@ class ECPointJ:
     '  0 - ECPointJ (nothing else), 1 - ECPoint (nothing else), 2 - x,y,z,[curve-optional]'
 
     def __init__(self, *args, **kwargs):
-        if (len(args) == 1):
-            if (isinstance(args[0], ECPointJ)):
+        if len(args) == 1:
+            if isinstance(args[0], ECPointJ):
                 ec_pointj = args[0]
                 self.ecc = ec_pointj.ecc
                 self.x = ec_pointj.x % self.ecc.p
                 self.y = ec_pointj.y % self.ecc.p
                 self.z = ec_pointj.z % self.ecc.p
                 # Do not check of point is on the curve when it's point at infinity
-                if (not self.is_infinity()):
+                if not self.is_infinity():
                     self.is_on_curve()
-            elif (isinstance(args[0], ECPoint)):
+            elif isinstance(args[0], ECPoint):
                 ec_point = args[0]
                 self.ecc = ec_point.ecc
-                if (ec_point.is_infinity()):
+                if ec_point.is_infinity():
                     self.x = int(1)
                     self.y = int(1)
                     self.z = int(0)
@@ -380,8 +380,8 @@ class ECPointJ:
                     self.y = ec_point.y % self.ecc.p
                     self.z = int(1)
                     self.is_on_curve()
-        elif (len(args) == 3 or len(args) == 4):
-            if (len(args) == 4):
+        elif len(args) == 3 or len(args) == 4:
+            if len(args) == 4:
                 self.ecc = args[3]
             else:
                 self.ecc = secp256r1  # default curve
@@ -389,7 +389,7 @@ class ECPointJ:
             self.y = inthex_to_long(args[1]) % self.ecc.p
             self.z = inthex_to_long(args[2]) % self.ecc.p
             # Do not check of point is on the curve when it's point at infinity
-            if (not self.is_infinity()):
+            if not self.is_infinity():
                 self.is_on_curve()
         else:
             raise Exception("Bad parameters in ECPointJ constractor!")
@@ -419,23 +419,22 @@ class ECPointJ:
 
     def is_on_curve(self):
         'Checking that (x,y,z) is on the curve: y^2 = x^3 + a*x*z^4 + b*z^6'
-        if (not ((
-                                 self.y ** 2 - self.x ** 3 - self.ecc.a * self.x * self.z ** 4 - self.ecc.b * self.z ** 6) % self.ecc.p) == 0):
+        if not ((self.y ** 2 - self.x ** 3 - self.ecc.a * self.x * self.z ** 4 - self.ecc.b * self.z ** 6) % self.ecc.p) == 0:
             raise Exception("Point is not on the curve!\n" + str(self))
         return True
 
     def is_infinity(self):
         'Checking that (x,y) is infinity - (1,1,0)'
-        if (self.x == 1 and self.y == 1 and self.z == 0):
+        if self.x == 1 and self.y == 1 and self.z == 0:
             return True
 
     def add(self, b):
         'Point addition: Jacobian + Affine'
-        if (self.ecc != b.ecc):
+        if self.ecc != b.ecc:
             raise Exception("Different curves for input points! " + str(self.ecc) + ", " + str(b.ecc))
-        if (self.is_infinity()):
+        if self.is_infinity():
             return ECPointJ(b)  # convert from Affine to Jacobian
-        if (b.is_infinity()):
+        if b.is_infinity():
             return self
         self.is_on_curve()
         b.is_on_curve()
@@ -468,11 +467,11 @@ class ECPointJ:
 
     def addJ(self, b):
         'Point addition: Jacobian + Jacobian'
-        if (self.ecc != b.ecc):
+        if self.ecc != b.ecc:
             raise Exception("Different curves for input points! " + str(self.ecc) + ", " + str(b.ecc))
-        if (self.is_infinity()):
+        if self.is_infinity():
             return b
-        if (b.is_infinity()):
+        if b.is_infinity():
             return self
         self.is_on_curve()
         b.is_on_curve()
@@ -507,11 +506,11 @@ class ECPointJ:
 
     def add2(self, b):
         'Point addition: Jacobian + Affine'
-        if (self.ecc != b.ecc):
+        if self.ecc != b.ecc:
             raise Exception("Different curves for input points! " + str(self.ecc) + ", " + str(b.ecc))
-        if (self.is_infinity()):
+        if self.is_infinity():
             return ECPointJ(b)  # convert from Affine to Jacobian
-        if (b.is_infinity()):
+        if b.is_infinity():
             return self
         self.is_on_curve()
         b.is_on_curve()
@@ -545,7 +544,7 @@ class ECPointJ:
 
     def double(self):
         'Point doubling: Jacobian'
-        if (self.is_infinity()):
+        if self.is_infinity():
             return self
         self.is_on_curve()
         # Double formulas
@@ -564,23 +563,23 @@ class ECDSA:
     'Two argument options: (dgst_bitlen, pub_key, prv_key), or (dgst_bitlen, pub_key)'
 
     def __init__(self, dgst_bitlen, pub_key, prv_key=0):
-        if (isinstance(pub_key, ECPoint)):
+        if isinstance(pub_key, ECPoint):
             self.dgst_bitlen = dgst_bitlen
             self.ecc = pub_key.ecc
             self.pub_key = pub_key
             self.pub_key.is_on_curve()
             self.n_bitlen = bitLen(self.ecc.n)
             self.shr_dgst = 0
-            if (self.dgst_bitlen > self.n_bitlen):
+            if self.dgst_bitlen > self.n_bitlen:
                 self.shr_dgst = self.dgst_bitlen - self.n_bitlen
         else:
             raise Exception("ECPoint expected (not found)!")
-        if (prv_key != 0):
+        if prv_key != 0:
             self.prv_key = inthex_to_long(prv_key) % self.ecc.p
             # Check that private key and public keys match
             genP = ECPoint(self.ecc.gx, self.ecc.gy, self.ecc)
             res = genP.multiply(self.prv_key)
-            if (res != self.pub_key):
+            if res != self.pub_key:
                 raise Exception("Private key and public key don't match!")
 
     def sign(self, digest):
@@ -591,12 +590,12 @@ class ECDSA:
         while True:
             k = randint(1, self.ecc.n - 1)
             R = k * ECPoint(self.ecc.gx, self.ecc.gy, self.ecc)
-            if (not R.is_infinity()):
+            if not R.is_infinity():
                 break
         s = modinv(k, self.ecc.n)
         s = (s * (digest + R.x * self.prv_key)) % self.ecc.n
         r = R.x % self.ecc.n
-        return (r, s)
+        return r, s
 
     def sign_k(self, k_in, digest):
         'Signing a hash digest, k is provided from a test vector'
@@ -606,7 +605,7 @@ class ECDSA:
         s = modinv(k_in, self.ecc.n)
         s = (s * (digest + R.x * self.prv_key)) % self.ecc.n
         r = R.x % self.ecc.n
-        return (r, s)
+        return r, s
 
     def verify(self, digest, r, s):
         'Verifying a signature(hash digest)'
@@ -618,7 +617,7 @@ class ECDSA:
         u1 = (digest * w) % self.ecc.n
         u2 = (r * w) % self.ecc.n
         R = u1 * ECPoint(self.ecc.gx, self.ecc.gy, self.ecc) + u2 * self.pub_key
-        if ((R.x % self.ecc.n) == r):
+        if (R.x % self.ecc.n) == r:
             return True
         else:
             return False
@@ -642,62 +641,62 @@ if __name__ == '__main__':
     left = left + left
     right = right + genP256
     right = right + genP256
-    if (left != right):
+    if left != right:
         raise Exception("Failed!")
 
     # Testing that 2*P, is the same as P+P
     left = 2 * genP256
     right = genP256 + genP256
-    if (left != right):
+    if left != right:
         raise Exception("Failed!")
 
     # Testing that 4*P, is the same as P+P+P+P
     left = 4 * genP256
     right = genP256 + genP256 + genP256 + genP256
-    if (left != right):
+    if left != right:
         raise Exception("Failed!")
 
     # Testing that 3*3*P, is the same as 9*P
     left = 3 * genP256
     left = 3 * left
     right = 9 * genP256
-    if (left != right):
+    if left != right:
         raise Exception("Failed!")
 
     # Testing negative operation, 4*P - P = 3*P
     left = 4 * genP256 - genP256
     right = 3 * genP256
-    if (left != right):
+    if left != right:
         raise Exception("Failed!")
 
     # Testing P+0 = P
     left = genP256 + infP256
     right = genP256
-    if (left != right):
+    if left != right:
         raise Exception("Failed!")
 
     # Testing 0*P = 0
     left = 0 * genP256
     right = infP256
-    if (left != right):
+    if left != right:
         raise Exception("Failed!")
 
     # Testing 1*P = P
     left = 1 * genP256
     right = genP256
-    if (left != right):
+    if left != right:
         raise Exception("Failed!")
 
     # Testing n*P = 0
     left = secp256r1.n * genP256
     right = infP256
-    if (left != right):
+    if left != right:
         raise Exception("Failed!")
 
     # Testing (n-1)*P = -P
     left = (secp256r1.n - 1) * genP256
     right = -genP256
-    if (left != right):
+    if left != right:
         raise Exception("Failed!")
 
     # Testing add(Jacobian, Affine)
@@ -705,14 +704,14 @@ if __name__ == '__main__':
     left = ECPointJ(2 * genP256) + genP256
     left = ECPoint(left)
     right = 3 * genP256
-    if (left != right):
+    if left != right:
         raise Exception("Failed!")
     # Version #2
     left = ECPointJ(2 * genP256)
     left = left.add2(genP256)
     left = ECPoint(left)
     right = 3 * genP256
-    if (left != right):
+    if left != right:
         raise Exception("Failed!")
 
     # Testing add(Jacobian, Jacobian)
@@ -720,20 +719,20 @@ if __name__ == '__main__':
     left = left.addJ(ECPointJ(2 * genP256) + 2 * genP256)
     left = ECPoint(left)
     right = 7 * genP256
-    if (left != right):
+    if left != right:
         raise Exception("Failed!")
     # Testing double(Jacobian) with add(Jacobian, Jacobian)
     left = ECPointJ(genP256) + 2 * genP256
     left = left.addJ(ECPointJ(genP256) + 2 * genP256)
     left = ECPoint(left)
     right = 6 * genP256
-    if (left != right):
+    if left != right:
         raise Exception("Failed!")
     # Testing add(Jacobian, Jacobian) == infinity
     left = ECPointJ(genP256).double().addJ(ECPointJ(-2 * genP256))
     left = ECPoint(left)
     right = 0 * genP256
-    if (left != right):
+    if left != right:
         raise Exception("Failed!")
 
     # Testing double(Jacobian)
@@ -741,7 +740,7 @@ if __name__ == '__main__':
     left = ECPointJ(genP256).double() + genP256
     left = ECPoint(left)
     right = 3 * genP256
-    if (left != right):
+    if left != right:
         raise Exception("Failed!")
 
     # Testing double(Jacobian) vs double(Affine)
@@ -749,13 +748,13 @@ if __name__ == '__main__':
     left = ECPointJ(genP256).double().add(2 * genP256)
     left = ECPoint(left)
     right = 4 * genP256
-    if (left != right):
+    if left != right:
         raise Exception("Failed!")
     # Version #2
     left = ECPointJ(genP256).double().add2(2 * genP256)
     left = ECPoint(left)
     right = 4 * genP256
-    if (left != right):
+    if left != right:
         raise Exception("Failed!")
 
     # Testing add(Jacobian, Affine) == infinity
@@ -763,12 +762,12 @@ if __name__ == '__main__':
     left = ECPointJ(genP256).double().add(-2 * genP256)
     left = ECPoint(left)
     right = 0 * genP256
-    if (left != right):
+    if left != right:
         raise Exception("Failed!")
     left = ECPointJ(genP256).double().add2(-2 * genP256)
     left = ECPoint(left)
     right = 0 * genP256
-    if (left != right):
+    if left != right:
         raise Exception("Failed!")
 
     # Testing mult(Jacobian) and mult(Affine)
@@ -779,7 +778,7 @@ if __name__ == '__main__':
         left = genP256.multiplyJ(k)
         # Affine
         right = genP256.multiply(k)
-        if (left != right):
+        if left != right:
             raise Exception("Failed!")
 
     # Testing octet string conversion with/wihtout compression
@@ -789,12 +788,12 @@ if __name__ == '__main__':
         # with compression
         os = orig.output()
         new = ECPoint(secp256r1, os)
-        if (new != orig):
+        if new != orig:
             raise Exception("Failed!")
         # without compression
         os = orig.output(False)
         new = ECPoint(secp256r1, os)
-        if (new != orig):
+        if new != orig:
             raise Exception("Failed!")
 
     # Testing ECDSA-256 sign/verify
@@ -804,7 +803,7 @@ if __name__ == '__main__':
     to_sign = ECDSA(256, pub_key, prv_key)
     to_verify = ECDSA(256, pub_key)
     (r, s) = to_sign.sign(digest)
-    if (not to_verify.verify(digest, r, s)):
+    if not to_verify.verify(digest, r, s):
         raise Exception("ECDSA failed!")
 
     # Testing ECDSA-256 sign/verify
@@ -817,7 +816,7 @@ if __name__ == '__main__':
     msg = "Example of ECDSA with P-256"
     dgst = int(sha256(msg).hexdigest(), 16)
     dgst_v = 0xA41A41A12A799548211C410C65D8133AFDE34D28BDD542E4B680CF2899C8A8C4
-    if (dgst_v != dgst):
+    if dgst_v != dgst:
         raise Exception("Digest from vector is not correct")
 
     # Long-term key pair
@@ -825,14 +824,14 @@ if __name__ == '__main__':
     Q_x_v = 0xB7E08AFDFE94BAD3F1DC8C734798BA1C62B3A0AD1E9EA2A38201CD0889BC7A19
     Q_y_v = 0x3603F747959DBF7A4BB226E41928729063ADC7AE43529E61B563BBC606CC5E09
     Q = d_v * genP256
-    if (Q_x_v != Q.x or Q_y_v != Q.y):
+    if Q_x_v != Q.x or Q_y_v != Q.y:
         raise Exception("Public key not as in NIST vector")
 
     # Ephemeral point
     k_v = 0x7A1A7E52797FC8CAAA435D2A4DACE39158504BF204FBE19F14DBB427FAEE50AE
     R = k_v * genP256
     R_x_v = 0x2B42F576D07F4165FF65D1F3B1500F81E44C316F1F0B3EF57325B69ACA46104F
-    if (R_x_v != R.x):  # This check is redundant as it will be checked as part of the signature
+    if R_x_v != R.x:  # This check is redundant as it will be checked as part of the signature
         raise Exception("Ephemeral pulic key not as in NIST vector")
 
     # Signature
@@ -840,7 +839,7 @@ if __name__ == '__main__':
     s_v = 0xDC42C2122D6392CD3E3A993A89502A8198C1886FE69D262C4B329BDB6B63FAF1
     to_sign = ECDSA(256, Q, d_v)
     (r, s) = to_sign.sign_k(k_v, dgst_v)
-    if (r_v != r or s_v != s):
+    if r_v != r or s_v != s:
         raise Exception("Signature does not match vector: FAILURE")
 
     print("Passed!")
