@@ -1,4 +1,3 @@
-from types import *
 from random import *
 from hashlib import *
 
