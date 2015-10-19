@@ -84,7 +84,9 @@ def inthex_to_long(x):
     'Basic function to convert Int or String to Int'
     if type(x) is int or type(x) is int:
         return int(x)
-    elif type(x) is StringType:
+    # StringType is invalid in Python 3
+    #elif type(x) is StringType:
+    elif isinstance(x, str):
         return int(x, 16)
 
 
