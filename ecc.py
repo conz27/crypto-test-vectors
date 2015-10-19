@@ -330,11 +330,11 @@ class ECPoint:
                 raise Exception("Bad octet string flag!")
             self.x = int(os[2:(2 + os_len)], 16)
             self.y = (self.x ** 3 + self.ecc.a * self.x + self.ecc.b) % self.ecc.p
-            self.y = sqrt(self.y, self.ecc.p);
+            self.y = sqrt(self.y, self.ecc.p)
             if (testBit(self.y, 0) != 0 and flag == "02") or (testBit(self.y, 0) == 0 and flag == "03"):
                 self.y = self.ecc.p - self.y
             self.is_on_curve()
-            return self;
+            return self
 
         # Uncompressed
         elif (2 * os_len) == (len(os) - 2):
@@ -344,7 +344,7 @@ class ECPoint:
             self.x = int(os[2:(2 + os_len)], 16)
             self.y = int(os[(2 + os_len):(2 + 2 * os_len)], 16)
             self.is_on_curve()
-            return self;
+            return self
 
         # Bad length
         else:
@@ -783,7 +783,7 @@ if __name__ == '__main__':
     # Testing octet string conversion with/wihtout compression
     for i in range(10):
         k = randint(1, genP256.ecc.n - 1)
-        orig = k * genP256;
+        orig = k * genP256
         # with compression
         os = orig.output()
         new = ECPoint(secp256r1, os)
