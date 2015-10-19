@@ -1,8 +1,8 @@
 def Hex(n, radix=0):
-    '''Converts n to a hex string.
+    """Converts n to a hex string.
        If radix is not 0, pads to the max number of characters for digits modulo the radix.
        Uses capital letters, and no trailing L.
-    '''
+    """
     if n < 0:
         signum = "-"
     else:
@@ -24,8 +24,8 @@ def Hex(n, radix=0):
 
 
 def int2lelist(n, radix, listlen=0):
-    '''Converts n to a little-endian list of length at least listlen in the given radix.
-    '''
+    """Converts n to a little-endian list of length at least listlen in the given radix.
+    """
     if n < 0:
         n = -n
     elif n == 0:
@@ -44,8 +44,8 @@ def int2lelist(n, radix, listlen=0):
 
 
 def belist2int(nlist, radix):
-    '''Converts n from a big-endian list in the given radix to an integer.
-    '''
+    """Converts n from a big-endian list in the given radix to an integer.
+    """
     n = 0
     for ndigit in nlist:
         n *= radix
@@ -55,8 +55,8 @@ def belist2int(nlist, radix):
 
 
 def int2belist(n, radix, listlen=0):
-    '''Converts n to a big-endian list of length at least listlen in the given radix.
-    '''
+    """Converts n to a big-endian list of length at least listlen in the given radix.
+    """
     nlist = int2lelist(n, radix, listlen)
     nlist.reverse()
 
@@ -64,8 +64,8 @@ def int2belist(n, radix, listlen=0):
 
 
 def lelist2int(nlist, radix):
-    '''Converts n from a little-endian list in the given radix to an integer.
-    '''
+    """Converts n from a little-endian list in the given radix to an integer.
+    """
     nlist_rev = nlist[:]
     nlist_rev.reverse()
 
