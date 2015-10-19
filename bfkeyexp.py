@@ -1,5 +1,5 @@
-import os
 from Crypto.Cipher import AES
+
 from array import *
 from ecc import *
 
