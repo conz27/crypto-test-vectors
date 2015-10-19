@@ -61,7 +61,7 @@ def modinv(a, m):
 
 
 def pow_mod(x, y, z):
-    'Calculate (x ** y) % z efficiently.'
+    """Calculate (x ** y) % z efficiently."""
     acc = 1
     while y:
         if y & 1:
@@ -80,7 +80,7 @@ def sqrt(a, m):
 #
 
 def inthex_to_long(x):
-    'Basic function to convert Int or String to Int'
+    """Basic function to convert Int or String to Int"""
     if type(x) is int or type(x) is int:
         return int(x)
     # StringType is invalid in Python 3
@@ -94,7 +94,7 @@ def inthex_to_long(x):
 #
 
 class ECurve:
-    'Common base class for all ECC curves'
+    """Common base class for all ECC curves"""
 
     def __init__(self, name, p, a, b, gx, gy, n, h):
         self.name = name
@@ -159,7 +159,7 @@ secp384r1 = ECurve(
 #
 
 class ECPoint:
-    'Common base class for all ECC points (all curves)'
+    """Common base class for all ECC points (all curves)"""
     'Order of passed argument sets by priority:'
     '  0 - ECPoint (nothing else), 1 - ECPointJ (nothing else), 2 - x,y,[curve-optional]'
 
@@ -236,19 +236,19 @@ class ECPoint:
         return "[" + hex(self.x) + "], [" + hex(self.y) + "]"
 
     def is_on_curve(self):
-        'Checking that (x,y) is on the curve: y^2 = x^3 + a*x + b'
+        """Checking that (x,y) is on the curve: y^2 = x^3 + a*x + b"""
         if not ((self.y ** 2 - self.x ** 3 - self.ecc.a * self.x - self.ecc.b) % self.ecc.p) == 0:
             raise Exception("Point is not on the curve!\n" + str(self))
         return True
 
     def is_infinity(self):
-        'Checking that (x,y) is infinity - (0,0)'
+        """Checking that (x,y) is infinity - (0,0)"""
         if self.x == 0 and self.y == 0:
             return True
 
     def add(self, b):
-        'Point addition: x3 = lmb^2 - x1 - x2,  y3 = lmb * (x2 - x3) - y2'
-        '                where lmb = (y2-y1)/(x2-x1)'
+        """Point addition: x3 = lmb^2 - x1 - x2,  y3 = lmb * (x2 - x3) - y2
+                         where lmb = (y2-y1)/(x2-x1)"""
         if self.ecc != b.ecc:
             raise Exception("Different curves for input points! " + str(self.ecc) + ", " + str(b.ecc))
         if self.is_infinity():
@@ -267,8 +267,8 @@ class ECPoint:
         return ECPoint(x3, y3, self.ecc)
 
     def double(self):
-        'Point doubling: x3 = t^2 - 2*x,  y3 = t * (x - x3) - y'
-        '                where t = (3*x+a)/(2y)'
+        """Point doubling: x3 = t^2 - 2*x,  y3 = t * (x - x3) - y
+                         where t = (3*x+a)/(2y)"""
         if self.is_infinity():
             return self
         self.is_on_curve()
@@ -306,7 +306,7 @@ class ECPoint:
         return ECPoint(acc)
 
     def output(self, compress=True):
-        'Output with/without point compression'
+        """Output with/without point compression"""
         self.is_on_curve()
         l = bitLen(self.ecc.p)
         os_len = 2 * ((l - 1) / 8 + 1)
@@ -320,7 +320,7 @@ class ECPoint:
             return "04" + format(self.x, "x").zfill(os_len) + format(self.y, "x").zfill(os_len)
 
     def input(self, os):
-        'Input octet string and convert to ECPoint'
+        """Input octet string and convert to ECPoint"""
         l = bitLen(self.ecc.p)
         os_len = 2 * ((l - 1) / 8 + 1)
         # Compressed
@@ -352,9 +352,9 @@ class ECPoint:
 
 
 class ECPointJ:
-    'Common base class for all ECC points in Jacobian (all curves)'
-    'Order of passed argument sets by priority:'
-    '  0 - ECPointJ (nothing else), 1 - ECPoint (nothing else), 2 - x,y,z,[curve-optional]'
+    """Common base class for all ECC points in Jacobian (all curves)
+      Order of passed argument sets by priority:
+      0 - ECPointJ (nothing else), 1 - ECPoint (nothing else), 2 - x,y,z,[curve-optional]"""
 
     def __init__(self, *args, **kwargs):
         if len(args) == 1:
@@ -417,18 +417,18 @@ class ECPointJ:
         return "[" + hex(self.x) + "], [" + hex(self.y) + "], [" + hex(self.z) + "]"
 
     def is_on_curve(self):
-        'Checking that (x,y,z) is on the curve: y^2 = x^3 + a*x*z^4 + b*z^6'
+        """Checking that (x,y,z) is on the curve: y^2 = x^3 + a*x*z^4 + b*z^6"""
         if not ((self.y ** 2 - self.x ** 3 - self.ecc.a * self.x * self.z ** 4 - self.ecc.b * self.z ** 6) % self.ecc.p) == 0:
             raise Exception("Point is not on the curve!\n" + str(self))
         return True
 
     def is_infinity(self):
-        'Checking that (x,y) is infinity - (1,1,0)'
+        """Checking that (x,y) is infinity - (1,1,0)"""
         if self.x == 1 and self.y == 1 and self.z == 0:
             return True
 
     def add(self, b):
-        'Point addition: Jacobian + Affine'
+        """Point addition: Jacobian + Affine"""
         if self.ecc != b.ecc:
             raise Exception("Different curves for input points! " + str(self.ecc) + ", " + str(b.ecc))
         if self.is_infinity():
@@ -465,7 +465,7 @@ class ECPointJ:
         return ECPointJ(x3, y3, z3, self.ecc)
 
     def addJ(self, b):
-        'Point addition: Jacobian + Jacobian'
+        """Point addition: Jacobian + Jacobian"""
         if self.ecc != b.ecc:
             raise Exception("Different curves for input points! " + str(self.ecc) + ", " + str(b.ecc))
         if self.is_infinity():
@@ -504,7 +504,7 @@ class ECPointJ:
         return ECPointJ(x3, y3, z3, self.ecc)
 
     def add2(self, b):
-        'Point addition: Jacobian + Affine'
+        """Point addition: Jacobian + Affine"""
         if self.ecc != b.ecc:
             raise Exception("Different curves for input points! " + str(self.ecc) + ", " + str(b.ecc))
         if self.is_infinity():
@@ -542,7 +542,7 @@ class ECPointJ:
         return ECPointJ(x3, y3, z3, self.ecc)
 
     def double(self):
-        'Point doubling: Jacobian'
+        """Point doubling: Jacobian"""
         if self.is_infinity():
             return self
         self.is_on_curve()
@@ -558,8 +558,8 @@ class ECPointJ:
 
 
 class ECDSA:
-    'Class for ECDSA algorithm'
-    'Two argument options: (dgst_bitlen, pub_key, prv_key), or (dgst_bitlen, pub_key)'
+    """Class for ECDSA algorithm
+     Two argument options: (dgst_bitlen, pub_key, prv_key), or (dgst_bitlen, pub_key)"""
 
     def __init__(self, dgst_bitlen, pub_key, prv_key=0):
         if isinstance(pub_key, ECPoint):
@@ -582,7 +582,7 @@ class ECDSA:
                 raise Exception("Private key and public key don't match!")
 
     def sign(self, digest):
-        'Signing a hash digest'
+        """Signing a hash digest"""
         digest = inthex_to_long(digest)
         digest = digest >> self.shr_dgst
         # Look for random 'k'
@@ -597,7 +597,7 @@ class ECDSA:
         return r, s
 
     def sign_k(self, k_in, digest):
-        'Signing a hash digest, k is provided from a test vector'
+        """Signing a hash digest, k is provided from a test vector"""
         digest = inthex_to_long(digest)
         digest = digest >> self.shr_dgst
         R = k_in * ECPoint(self.ecc.gx, self.ecc.gy, self.ecc)
@@ -607,7 +607,7 @@ class ECDSA:
         return r, s
 
     def verify(self, digest, r, s):
-        'Verifying a signature(hash digest)'
+        """Verifying a signature(hash digest)"""
         digest = inthex_to_long(digest)
         digest = digest >> self.shr_dgst
         r = inthex_to_long(r)
