@@ -15,20 +15,20 @@ def f_k_int_x(k, x):
         print("x+" + str(i) + ": Input to AES block " + str(i) + " encryption (128 bits):")
         xpi = "{0:032X}".format(x + i)
         print("0x" + xpi)
-        cArrayDef("[be]", "xp" + str(i), int(xpi, 16), 128 / 8, radix_8, False);
+        cArrayDef("[be]", "xp" + str(i), int(xpi, 16), 128 / 8, radix_8, False)
         print(os.linesep)
 
         print("AES_k(x+" + str(i) + "): Output of AES block " + str(i) + " encryption (128 bits):")
         aes_xpi = aes_obj.encrypt(xpi.decode('hex')).encode('hex')
         print("0x" + aes_xpi.upper())
-        cArrayDef("[be]", "aes_xp" + str(i), int(aes_xpi, 16), 128 / 8, radix_8, False);
+        cArrayDef("[be]", "aes_xp" + str(i), int(aes_xpi, 16), 128 / 8, radix_8, False)
         print(os.linesep)
 
         print("AES_k(x+" + str(i) + ") XOR (x+" + str(i) + "): block " + str(i) + " (128 bits):")
         blki_int = int(xpi, 16) ^ int(aes_xpi, 16)
         blki = "{0:032X}".format(blki_int)
         print("0x" + blki)
-        cArrayDef("[be]", "block_" + str(i), blki_int, 128 / 8, radix_8, False);
+        cArrayDef("[be]", "block_" + str(i), blki_int, 128 / 8, radix_8, False)
         print(os.linesep)
 
         s += blki
@@ -84,15 +84,15 @@ print(os.linesep)
 
 print("a: Signing seed private key (256 bits):")
 print(Hex(a, radix_256))
-cArrayDef("[le]", "a", a, 256 / 32, radix_32, True);
+cArrayDef("[le]", "a", a, 256 / 32, radix_32, True)
 print(os.linesep)
 
 print("A: Signing seed public key (2*256 bits):")
 print(A)
 print("[le] A = {")
-cArrayDef("", "", A.x, 8, radix_32);
+cArrayDef("", "", A.x, 8, radix_32)
 print()
-cArrayDef("", "", A.y, 8, radix_32);
+cArrayDef("", "", A.y, 8, radix_32)
 print()
 print("}" + os.linesep)
 
@@ -121,9 +121,9 @@ print("A + f_k(x_cert)*G_P256 mod l: Expanded public key (256 bits)")
 A_exp = A + f_k_x_cert * genP256
 print(A_exp)
 print("[le] A_exp = {")
-cArrayDef("", "", A_exp.x, 8, radix_32);
+cArrayDef("", "", A_exp.x, 8, radix_32)
 print()
-cArrayDef("", "", A_exp.y, 8, radix_32);
+cArrayDef("", "", A_exp.y, 8, radix_32)
 print()
 print("}" + os.linesep)
 
@@ -140,7 +140,7 @@ print(os.linesep)
 
 print("h: Signing seed private key (256 bits):")
 print(Hex(h, radix_256))
-cArrayDef("[le]", "h", h, 256 / 32, radix_32, True);
+cArrayDef("[le]", "h", h, 256 / 32, radix_32, True)
 print(os.linesep)
 
 print("H: Signing seed public key (2*256 bits):")
