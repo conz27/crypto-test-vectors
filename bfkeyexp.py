@@ -79,7 +79,7 @@ print("------------------------------------")
 
 print("ck: AES key (128 bits, randomly generated):")
 print("0x" + ck)
-cArrayDef("[be]", "ck", int(ck, 16), 128 / 8, radix_8, False);
+cArrayDef("[be]", "ck", int(ck, 16), 128 / 8, radix_8, False)
 print(os.linesep)
 
 print("a: Signing seed private key (256 bits):")
@@ -102,19 +102,19 @@ print(Hex(x_cert, radix_128) + os.linesep)
 f_k_int_x_cert = f_k_int_x(ck, x_cert)
 print("f_k^{int}(x) = block1 || block2 || block3 (384 bits):")
 print("0x" + f_k_int_x_cert)
-cArrayDef("[be]", "f_k_int_x_cert", int(f_k_int_x_cert, 16), 384 / 8, radix_8, False);
+cArrayDef("[be]", "f_k_int_x_cert", int(f_k_int_x_cert, 16), 384 / 8, radix_8, False)
 print(os.linesep)
 
 print("f_k(x) = f_k^{int}(x) mod l, where l is the order of the group of points on the curve (256 bits):")
 f_k_x_cert = int(f_k_int_x_cert, 16) % genP256.ecc.n
 print(Hex(f_k_x_cert, radix_256))
-cArrayDef("[le]", "f_k_x_cert", f_k_x_cert, 256 / 32, radix_32, True);
+cArrayDef("[le]", "f_k_x_cert", f_k_x_cert, 256 / 32, radix_32, True)
 print(os.linesep)
 
 print("a + f_k(x_cert) mod l: Expanded private key (256 bits)")
 a_exp = (a + f_k_x_cert) % genP256.ecc.n
 print(Hex(a_exp, radix_256))
-cArrayDef("[le]", "a_exp", a_exp, 256 / 32, radix_32, True);
+cArrayDef("[le]", "a_exp", a_exp, 256 / 32, radix_32, True)
 print(os.linesep)
 
 print("A + f_k(x_cert)*G_P256 mod l: Expanded public key (256 bits)")
@@ -135,7 +135,7 @@ print("-----------------------------------")
 
 print("ek: AES key (128 bits, randomly generated):")
 print("0x" + ek)
-cArrayDef("[be]", "ek", int(ek, 16), 128 / 8, radix_8, False);
+cArrayDef("[be]", "ek", int(ek, 16), 128 / 8, radix_8, False)
 print(os.linesep)
 
 print("h: Signing seed private key (256 bits):")
@@ -146,9 +146,9 @@ print(os.linesep)
 print("H: Signing seed public key (2*256 bits):")
 print(H)
 print("[le] H = {")
-cArrayDef("", "", H.x, 8, radix_32);
+cArrayDef("", "", H.x, 8, radix_32)
 print()
-cArrayDef("", "", H.y, 8, radix_32);
+cArrayDef("", "", H.y, 8, radix_32)
 print()
 print("}" + os.linesep)
 
@@ -158,28 +158,28 @@ print(Hex(x_enc, radix_128) + os.linesep)
 f_k_int_x_enc = f_k_int_x(ek, x_enc)
 print("f_k^{int}(x) = block1 || block2 || block3 (384 bits):")
 print("0x" + f_k_int_x_enc)
-cArrayDef("[be]", "f_k_int_x_enc", int(f_k_int_x_enc, 16), 384 / 8, radix_8, False);
+cArrayDef("[be]", "f_k_int_x_enc", int(f_k_int_x_enc, 16), 384 / 8, radix_8, False)
 print(os.linesep)
 
 print("f_k(x) = f_k^{int}(x) mod l, where l is the order of the group of points on the curve (256 bits):")
 f_k_x_enc = int(f_k_int_x_enc, 16) % genP256.ecc.n
 print(Hex(f_k_x_enc, radix_256))
-cArrayDef("[le]", "f_k_x_enc", f_k_x_enc, 256 / 32, radix_32, True);
+cArrayDef("[le]", "f_k_x_enc", f_k_x_enc, 256 / 32, radix_32, True)
 print(os.linesep)
 
 print("h + f_k(x_enc) mod l: Expanded private key (256 bits)")
 h_exp = (h + f_k_x_enc) % genP256.ecc.n
 print(Hex(h_exp, radix_256))
-cArrayDef("[le]", "h_exp", h_exp, 256 / 32, radix_32, True);
+cArrayDef("[le]", "h_exp", h_exp, 256 / 32, radix_32, True)
 print(os.linesep)
 
 print("H + f_k(x_enc)*G_P256 mod l: Expanded public key (256 bits)")
 H_exp = H + f_k_x_enc * genP256
 print(H_exp)
 print("[le] H_exp = {")
-cArrayDef("", "", H_exp.x, 8, radix_32);
+cArrayDef("", "", H_exp.x, 8, radix_32)
 print()
-cArrayDef("", "", H_exp.y, 8, radix_32);
+cArrayDef("", "", H_exp.y, 8, radix_32)
 print()
 print("}" + os.linesep)
 
