@@ -254,22 +254,22 @@ for key, nonce, pt in zip(key_list, nnc_list, pt_list):
 
     # print key
     print("K = 0x" + key)
-    cArrayDef("", "key", int(key, 16), len(key) / 2, radix_8, False);
+    cArrayDef("", "key", int(key, 16), len(key) / 2, radix_8, False)
     print(os.linesep)
 
     # print nonce
     print("N = 0x" + nonce)
-    cArrayDef("", "nonce", int(nonce, 16), len(nonce) / 2, radix_8, False);
+    cArrayDef("", "nonce", int(nonce, 16), len(nonce) / 2, radix_8, False)
     print(os.linesep)
 
     # print plaintext
     print("P = 0x" + pt)
-    cArrayDef("", "pt", int(pt, 16), len(pt) / 2, radix_8, False);
+    cArrayDef("", "pt", int(pt, 16), len(pt) / 2, radix_8, False)
     print(os.linesep)
 
     # print ciphertext || tag
     print("C_T = 0x" + c_t)
-    cArrayDef("", "c_t", int(c_t, 16), len(c_t) / 2, radix_8, False);
+    cArrayDef("", "c_t", int(c_t, 16), len(c_t) / 2, radix_8, False)
     print(os.linesep)
 
     i += 1
