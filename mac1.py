@@ -12,7 +12,7 @@ radix_8 = 2 ** 8
 
 
 def sha256_hmac(key, msg):
-    '''
+    """
     MAC1 is HMAC [in IEEE 1363a, Section 14.4.1]
     This is HMAC with SHA-256,
     with tag output bitlength tbits = 128
@@ -25,7 +25,7 @@ def sha256_hmac(key, msg):
 
     Output:
     tag, an octet string of bit length = 128, i.e. 16 octets
-    '''
+    """
 
     sha256_in_blk_len = 512 / 8
     num_blk_in = int(ceil(len(msg) / float(sha256_in_blk_len)))
@@ -33,7 +33,7 @@ def sha256_hmac(key, msg):
 
     # If the key is longer than 512 bits, let key = sha256(key)
     # else, right-pad it with 0s to 512-bit long
-    if (len(key) > sha256_in_blk_len):
+    if len(key) > sha256_in_blk_len:
         key = sha256(key.decode('hex')).hexdigest()
     key += "00" * (sha256_in_blk_len - (len(key) / 2))
 
@@ -133,17 +133,17 @@ for key, msg, tag in zip(key_list, msg_list, tag_list):
 
     # print key
     print("K = 0x" + key)
-    cArrayDef("", "key", int(key, 16), len(key) / 2, radix_8, False);
+    cArrayDef("", "key", int(key, 16), len(key) / 2, radix_8, False)
     print(os.linesep)
 
     # print msg
     print("M = 0x" + msg)
-    cArrayDef("", "msg", int(msg, 16), len(msg) / 2, radix_8, False);
+    cArrayDef("", "msg", int(msg, 16), len(msg) / 2, radix_8, False)
     print(os.linesep)
 
     # print msg
     print("T = 0x" + tag)
-    cArrayDef("", "tag", int(tag, 16), len(tag) / 2, radix_8, False);
+    cArrayDef("", "tag", int(tag, 16), len(tag) / 2, radix_8, False)
     print(os.linesep)
 
     i += 1
