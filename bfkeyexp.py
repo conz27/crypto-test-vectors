@@ -5,8 +5,7 @@ from ecc import *
 import os
 
 # Uncomment the following to obtain different values every time this script is run
-# Using version 1 of PRNG (Python 3 using Python 2 seed() impl)
-seed(333, version=1)
+seed(333)
 
 
 def f_k_int_x(k, x):
