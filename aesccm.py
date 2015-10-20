@@ -42,28 +42,28 @@ def aes_ccm_enc(key, nonce, msg):
     # Authentication: AES-CBC-MAC(K, N, M)
     # Block B0
 
-    ##  L: #octets in length of message field
-    ##   The first block B_0 is formatted as follows, where the length of the message field
-    ##   is encoded in most-significant-byte-first order:
-    ##
-    ##      Octet Number   Contents
-    ##      ------------   ---------
-    ##      0              Flags
-    ##      1 ... 15-L     Nonce N
-    ##      16-L ... 15    length of message field
-    ##
-    ##   Within the first block B_0, the Flags field is formatted as follows:
-    ##
-    ##      Bit Number   Contents
-    ##      ----------   ----------------------
-    ##      7            Reserved (always zero)
-    ##      6            Adata
-    ##      5 ... 3      (#octets in authentication field - 2)/2
-    ##      2 ... 0      (#octest in length of message field -1)
+    #  L: #octets in length of message field
+    #   The first block B_0 is formatted as follows, where the length of the message field
+    #   is encoded in most-significant-byte-first order:
+    #
+    #      Octet Number   Contents
+    #      ------------   ---------
+    #      0              Flags
+    #      1 ... 15-L     Nonce N
+    #      16-L ... 15    length of message field
+    #
+    #   Within the first block B_0, the Flags field is formatted as follows:
+    #
+    #      Bit Number   Contents
+    #      ----------   ----------------------
+    #      7            Reserved (always zero)
+    #      6            Adata
+    #      5 ... 3      (#octets in authentication field - 2)/2
+    #      2 ... 0      (#octest in length of message field -1)
 
-    ##         X_1     := E(K, B_0)
-    ##         X_{i+1} := E(K, X_i XOR B_i)
-    ##         T := first-M-bytes( X_n+1 )
+    #         X_1     := E(K, B_0)
+    #         X_{i+1} := E(K, X_i XOR B_i)
+    #         T := first-M-bytes( X_n+1 )
 
     B_0_0 = "{0:02X}".format((((tag_len - 2) / 2) << 3) | (msg_len_len - 1))
     nonce_padded = "{0:0>{width}}".format(nonce, width=nonce_len * 2)
@@ -86,22 +86,22 @@ def aes_ccm_enc(key, nonce, msg):
         # Final tag is encrypted and is calculated after the first encrypted block is calculated
 
         # Encryption: AES-CTR(K, N, M)
-    ##    key stream blocks:
-    ##      S_i := E( K, A_i )   for i=0, 1, 2, ...
-    ##    Ciphertext:
-    ##      C_i := B_i XOR S_i   for i=1,2,...
-    ##    Tag:
-    ##      U   := T XOR S_0     truncated to tag length
-    ##
-    ##   The values A_i are formatted as follows, where the Counter field i is
-    ##   encoded in most-significant-byte first order:
-    ##
-    ##      Octet Number   Contents
-    ##      ------------   ---------
-    ##      0              Flags
-    ##      1 ... 15-L     Nonce N
-    ##      16-L ... 15    Counter i
-    ##
+    #    key stream blocks:
+    #      S_i := E( K, A_i )   for i=0, 1, 2, ...
+    #    Ciphertext:
+    #      C_i := B_i XOR S_i   for i=1,2,...
+    #    Tag:
+    #      U   := T XOR S_0     truncated to tag length
+    #
+    #   The values A_i are formatted as follows, where the Counter field i is
+    #   encoded in most-significant-byte first order:
+    #
+    #      Octet Number   Contents
+    #      ------------   ---------
+    #      0              Flags
+    #      1 ... 15-L     Nonce N
+    #      16-L ... 15    Counter i
+    #
     # Flags byte = (#octest in length of message field-1) = L-1
 
     A_0_0 = "{0:02X}".format(msg_len_len - 1)
