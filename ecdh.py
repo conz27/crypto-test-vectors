@@ -253,22 +253,22 @@ for Ad, Bx, By, Zi in zip(Ad_lst, Bx_lst, By_lst, Z_lst):
 
     # print a
     print(("a = 0x" + a))
-    cArrayDef("", "a", int(a, 16), len(a) / 2, radix_8, False);
+    cArrayDef("", "a", int(a, 16), len(a) / 2, radix_8, False)
     print(os.linesep)
 
     # print B.x
     print(("Bx = " + Hex(Bx, radix_256)))
-    cArrayDef("", "Bx", Bx, 256 / 8, radix_8, False);
+    cArrayDef("", "Bx", Bx, 256 / 8, radix_8, False)
     print(os.linesep)
 
     # print B.y
     print(("By = " + Hex(By, radix_256)))
-    cArrayDef("", "By", By, 256 / 8, radix_8, False);
+    cArrayDef("", "By", By, 256 / 8, radix_8, False)
     print(os.linesep)
 
     # print Z
     print(("Z = 0x" + Z))
-    cArrayDef("", "Z", int(Z, 16), len(Z) / 2, radix_8, False);
+    cArrayDef("", "Z", int(Z, 16), len(Z) / 2, radix_8, False)
     print(os.linesep)
 
     i += 1
