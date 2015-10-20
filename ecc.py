@@ -530,14 +530,14 @@ class ECPointJ:
         z3 = self.z * t1
         t3 = t1 ** 2
         t4 = t3 * t1
-        t3 = t3 * self.x
+        t3 *= self.x
         t1 = 2 * t3
         x3 = t2 ** 2
-        x3 = x3 - t1
-        x3 = x3 - t4
-        t3 = t3 - x3
-        t3 = t3 * t2
-        t4 = t4 * self.y
+        x3 -= t1
+        x3 -= t4
+        t3 -= x3
+        t3 *= t2
+        t4 *= self.y
         y3 = t3 - t4
         return ECPointJ(x3, y3, z3, self.ecc)
 
@@ -657,7 +657,7 @@ if __name__ == '__main__':
 
     # Testing that 3*3*P, is the same as 9*P
     left = 3 * genP256
-    left = 3 * left
+    left *= 3
     right = 9 * genP256
     if left != right:
         raise Exception("Failed!")
