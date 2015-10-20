@@ -10,7 +10,7 @@ radix_8 = 2 ** 8
 
 
 def aes_ccm_enc(key, nonce, msg):
-    '''
+    """
     This is AES-CCM-128 implementation for 1609.2 v3
     It is based on NIST SP 800-38C (and RFC 3610) with the following:
     - Adata = 0, i.e. no associated authenticated data
@@ -25,7 +25,7 @@ def aes_ccm_enc(key, nonce, msg):
 
     Output:
     ciphertext || tag = C || T {octet string}
-    '''
+    """
 
     aes128_blk_len = 128 / 8
     key_len = 128 / 8
@@ -77,8 +77,8 @@ def aes_ccm_enc(key, nonce, msg):
         X = aes.encrypt(xor_out.decode('hex')).encode('hex')
 
     # handling the last block
-    if (last_bytes):
-        B_i = "{0:0<{width}}".format(msg[(msg_blk_len) * aes128_blk_len * 2:len(msg)], width=aes128_blk_len * 2)
+    if last_bytes:
+        B_i = "{0:0<{width}}".format(msg[msg_blk_len * aes128_blk_len * 2:len(msg)], width=aes128_blk_len * 2)
         xor_out = "{0:0{width}X}".format((int(B_i, 16) ^ int(X, 16)), width=aes128_blk_len * 2)
         X = aes.encrypt(xor_out.decode('hex')).encode('hex')
         # T := X[:tag_len*2]
@@ -122,11 +122,11 @@ def aes_ccm_enc(key, nonce, msg):
         C_i = "{0:0{width}X}".format((int(B_i, 16) ^ int(S_i, 16)), width=aes128_blk_len * 2)
         C += C_i
     # handling the last block
-    if (last_bytes):
+    if last_bytes:
         counter = "{0:0{width}X}".format(msg_blk_len + 1, width=msg_len_len * 2)
         A_i = A_0_0 + nonce_padded + counter
         S_i = aes.encrypt(A_i.decode('hex')).encode('hex')
-        B_i = "{0:0<{width}}".format(msg[(msg_blk_len) * aes128_blk_len * 2:len(msg)], width=aes128_blk_len * 2)
+        B_i = "{0:0<{width}}".format(msg[msg_blk_len * aes128_blk_len * 2:len(msg)], width=aes128_blk_len * 2)
         C_i = "{0:0{width}X}".format((int(B_i, 16) ^ int(S_i, 16)), width=aes128_blk_len * 2)
         C_i = C_i[:last_bytes * 2]
         C += C_i
@@ -175,11 +175,11 @@ def aes_ccm_dec(key, nonce, ctxt):
         P_i = "{0:0{width}X}".format((int(C_i, 16) ^ int(S_i, 16)), width=aes128_blk_len * 2)
         P += P_i
     # handling the last block
-    if (last_bytes):
+    if last_bytes:
         counter = "{0:0{width}X}".format(ciphertxt_blk_len + 1, width=ciphertxt_len_len * 2)
         A_i = A_0_0 + nonce_padded + counter
         S_i = aes.encrypt(A_i.decode('hex')).encode('hex')
-        C_i = "{0:0<{width}}".format(ciphertxt[(ciphertxt_blk_len) * aes128_blk_len * 2:len(ciphertxt)],
+        C_i = "{0:0<{width}}".format(ciphertxt[ciphertxt_blk_len * aes128_blk_len * 2:len(ciphertxt)],
                                      width=aes128_blk_len * 2)
         P_i = "{0:0{width}X}".format((int(C_i, 16) ^ int(S_i, 16)), width=aes128_blk_len * 2)
         P_i = P_i[:last_bytes * 2]
@@ -198,13 +198,13 @@ def aes_ccm_dec(key, nonce, ctxt):
         X = aes.encrypt(xor_out.decode('hex')).encode('hex')
 
     # handling the last block
-    if (last_bytes):
-        B_i = "{0:0<{width}}".format(P[(ciphertxt_blk_len) * aes128_blk_len * 2:len(ciphertxt)],
+    if last_bytes:
+        B_i = "{0:0<{width}}".format(P[ciphertxt_blk_len * aes128_blk_len * 2:len(ciphertxt)],
                                      width=aes128_blk_len * 2)
         xor_out = "{0:0{width}X}".format((int(B_i, 16) ^ int(X, 16)), width=aes128_blk_len * 2)
         X = aes.encrypt(xor_out.decode('hex')).encode('hex')
 
-    if (T.upper() != X[:tag_len * 2].upper()):
+    if T.upper() != X[:tag_len * 2].upper():
         return "-1"
 
     return P
