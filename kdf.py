@@ -1,18 +1,17 @@
-
 import os
 from hashlib import sha256
 from math import ceil
-
 from array import *
 
-radix_256 = 2**256
-radix_128 = 2**128
-radix_32 = 2**32
-radix_16 = 2**16
-radix_8  = 2**8
+radix_256 = 2 ** 256
+radix_128 = 2 ** 128
+radix_32 = 2 ** 32
+radix_16 = 2 ** 16
+radix_8 = 2 ** 8
+
 
 def sha256_kdf(ss, kdp, dl):
-    '''
+    """
     This KDF is KDF2 [in IEEE 1363a, Section 13.2] with SHA-256.
 
     KDF(SS, KDP) = Hash(SS || counter || KDP)
@@ -25,20 +24,21 @@ def sha256_kdf(ss, kdp, dl):
 
     Output:
     octet string of the desired length, dl.
-    '''
+    """
 
     assert dl >= 0, 'dl should be positive integer'
 
-    sha256_blk_len = 256/8
-    num_blk_out = int(ceil(dl/float(sha256_blk_len)))
+    sha256_blk_len = 256 / 8
+    num_blk_out = int(ceil(dl / float(sha256_blk_len)))
 
     kdf_out = ''
-    for i in range(1, num_blk_out+1):
+    for i in range(1, num_blk_out + 1):
         hash_input = (ss + "{0:08x}".format(i) + kdp).decode('hex')
         kdf_out += sha256(hash_input).hexdigest()
 
-    kdf_out = kdf_out[:dl*2]
+    kdf_out = kdf_out[:dl * 2]
     return kdf_out
+
 
 # Test vector #1, ANSI X9.63
 # 	[SHA-256]
@@ -83,12 +83,12 @@ Inputs: shared secret (ss), key derivation parameter (kdp), desired octet string
 Output: derived key of length dl octets
 """)
 
-ss_list  = [known_ss1, known_ss2, known_ss3, known_ss4]
+ss_list = [known_ss1, known_ss2, known_ss3, known_ss4]
 kdp_list = [known_kdp1, known_kdp2, known_kdp3, known_kdp4]
 key_list = [known_key1, known_key2, known_key3, known_key4]
 i = 1
 for ss, kdp, key in zip(ss_list, kdp_list, key_list):
-    dl = len(key)/2
+    dl = len(key) / 2
     kdf_out = sha256_kdf(ss, kdp, dl)
     assert kdf_out == key, "error in kdf"
     i += 1
@@ -97,14 +97,18 @@ for ss, kdp, key in zip(ss_list, kdp_list, key_list):
     print("---------------")
     # print shared secret
     print("ss = 0x" + ss)
-    cArrayDef("", "ss", int(ss, 16), len(ss)/2, radix_8, False); print(os.linesep)
-    
-    #print key derivation parameter
-    if (kdp == ""):
-        print("kdp = \"\""); print()
+    cArrayDef("", "ss", int(ss, 16), len(ss) / 2, radix_8, False);
+    print(os.linesep)
+
+    # print key derivation parameter
+    if kdp == "":
+        print("kdp = \"\"");
+        print()
     else:
         print("kdp = 0x" + kdp)
-        cArrayDef("", "kdp", int(kdp, 16), len(kdp)/2, radix_8, False); print(os.linesep)
+        cArrayDef("", "kdp", int(kdp, 16), len(kdp) / 2, radix_8, False);
+        print(os.linesep)
 
-    #print desired length
-    print("dl = " + str(dl) + " octets"); print(os.linesep)
+    # print desired length
+    print("dl = " + str(dl) + " octets");
+    print(os.linesep)
