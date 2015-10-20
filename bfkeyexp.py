@@ -1,8 +1,8 @@
 from Crypto.Cipher import AES
 
-import os
 from array import *
 from ecc import *
+import os
 
 # Uncomment the following to obtain different values every time this script is run
 # Using version 1 of PRNG (Python 3 using Python 2 seed() impl)
