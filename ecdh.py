@@ -233,31 +233,36 @@ Bx_lst = [ QCAVSx0, QCAVSx1, QCAVSx2, QCAVSx3, QCAVSx4, QCAVSx5, QCAVSx6, QCAVSx
 By_lst = [ QCAVSy0, QCAVSy1, QCAVSy2, QCAVSy3, QCAVSy4, QCAVSy5, QCAVSy6, QCAVSy7, QCAVSy8, QCAVSy9, QCAVSy10, QCAVSy11, QCAVSy12, QCAVSy13, QCAVSy14, QCAVSy15, QCAVSy16, QCAVSy17, QCAVSy18, QCAVSy19, QCAVSy20, QCAVSy21, QCAVSy22, QCAVSy23, QCAVSy24 ]
 Z_lst  = [ ZIUT0, ZIUT1, ZIUT2, ZIUT3, ZIUT4, ZIUT5, ZIUT6, ZIUT7, ZIUT8, ZIUT9, ZIUT10, ZIUT11, ZIUT12, ZIUT13, ZIUT14, ZIUT15, ZIUT16, ZIUT17, ZIUT18, ZIUT19, ZIUT20, ZIUT21, ZIUT22, ZIUT23, ZIUT24 ]
 
-i = 1
-for Ad, Bx, By, Zi in zip(Ad_lst, Bx_lst, By_lst, Z_lst):
-    a = "{0:0>{width}x}".format(Ad, width=bitLen(genP256.ecc.n)/4)
-    B = ECPoint(Bx, By, secp256r1)
-    Z = ecdh(a, B)
-    Zi_str = "{0:0>{width}X}".format(Zi, width=bitLen(genP256.ecc.n)/4)
-    assert Z == Zi_str.upper(), "Shared secret does not match test vector"
+#
+# Tests (only runing them when invoked directly, but not when importing it)
+#
+if __name__ == '__main__':
 
-    print("Test Vector #" + str(i) + ":")
-    print("---------------")
+    i = 1
+    for Ad, Bx, By, Zi in zip(Ad_lst, Bx_lst, By_lst, Z_lst):
+        a = "{0:0>{width}x}".format(Ad, width=bitLen(genP256.ecc.n)/4)
+        B = ECPoint(Bx, By, secp256r1)
+        Z = ecdh(a, B)
+        Zi_str = "{0:0>{width}X}".format(Zi, width=bitLen(genP256.ecc.n)/4)
+        assert Z == Zi_str.upper(), "Shared secret does not match test vector"
 
-    # print a
-    print("a = 0x" + a)
-    cArrayDef("", "a", long(a, 16), len(a)/2, radix_8, False); print(os.linesep)
-    
-    #print B.x
-    print("Bx = " + Hex(Bx, radix_256))
-    cArrayDef("", "Bx", Bx, 256/8, radix_8, False); print(os.linesep)
+        print("Test Vector #" + str(i) + ":")
+        print("---------------")
 
-    #print B.y
-    print("By = " + Hex(By, radix_256))
-    cArrayDef("", "By", By, 256/8, radix_8, False); print(os.linesep)
+        # print a
+        print("a = 0x" + a)
+        cArrayDef("", "a", long(a, 16), len(a)/2, radix_8, False); print(os.linesep)
 
-    # print Z
-    print("Z = 0x" + Z)
-    cArrayDef("", "Z", long(Z, 16), len(Z)/2, radix_8, False); print(os.linesep)
+        #print B.x
+        print("Bx = " + Hex(Bx, radix_256))
+        cArrayDef("", "Bx", Bx, 256/8, radix_8, False); print(os.linesep)
 
-    i += 1
+        #print B.y
+        print("By = " + Hex(By, radix_256))
+        cArrayDef("", "By", By, 256/8, radix_8, False); print(os.linesep)
+
+        # print Z
+        print("Z = 0x" + Z)
+        cArrayDef("", "Z", long(Z, 16), len(Z)/2, radix_8, False); print(os.linesep)
+
+        i += 1

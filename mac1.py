@@ -122,27 +122,31 @@ Output: Tag (T) of size 128 bits, i.e. 16 octets
 key_list = [known_key1, known_key2, known_key3, known_key4, known_key5, known_key6, known_key7]
 msg_list = [known_msg1, known_msg2, known_msg3, known_msg4, known_msg5, known_msg6, known_msg7]
 tag_list = [known_tag1, known_tag2, known_tag3, known_tag4, known_tag5, known_tag6, known_tag7]
-i = 1
-for key, msg, tag in zip(key_list, msg_list, tag_list):
+#
+# Tests (only runing them when invoked directly, but not when importing it)
+#
+if __name__ == '__main__':
+    i = 1
+    for key, msg, tag in zip(key_list, msg_list, tag_list):
 
-    tag = tag[:32]
-    tag_out = sha256_hmac(key, msg)
-    #print("known_tag:    " + tag)
-    assert tag_out == tag, "error in hmac"
+        tag = tag[:32]
+        tag_out = sha256_hmac(key, msg)
+        #print("known_tag:    " + tag)
+        assert tag_out == tag, "error in hmac"
 
-    print("Test Vector #" + str(i) + ":")
-    print("---------------")
+        print("Test Vector #" + str(i) + ":")
+        print("---------------")
 
-    # print key
-    print("K = 0x" + key)
-    cArrayDef("", "key", long(key, 16), len(key)/2, radix_8, False); print(os.linesep)
-    
-    #print msg
-    print("M = 0x" + msg)
-    cArrayDef("", "msg", long(msg, 16), len(msg)/2, radix_8, False); print(os.linesep)
+        # print key
+        print("K = 0x" + key)
+        cArrayDef("", "key", long(key, 16), len(key)/2, radix_8, False); print(os.linesep)
 
-    #print msg
-    print("T = 0x" + tag)
-    cArrayDef("", "tag", long(tag, 16), len(tag)/2, radix_8, False); print(os.linesep)
+        #print msg
+        print("M = 0x" + msg)
+        cArrayDef("", "msg", long(msg, 16), len(msg)/2, radix_8, False); print(os.linesep)
 
-    i += 1
+        #print msg
+        print("T = 0x" + tag)
+        cArrayDef("", "tag", long(tag, 16), len(tag)/2, radix_8, False); print(os.linesep)
+
+        i += 1
