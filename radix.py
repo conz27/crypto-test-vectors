@@ -20,7 +20,7 @@ def Hex(n, radix=0):
     else:
         pad = 0
 
-    return(signum + "0x" + int(pad)*"0" + nh.upper())
+    return signum + "0x" + int(pad) * "0" + nh.upper()
 
 
 def int2lelist(n, radix, listlen=0):
