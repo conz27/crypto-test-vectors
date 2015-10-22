@@ -12,19 +12,19 @@ radix_8  = 2**8
 
 def aes_ccm_enc(key, nonce, msg):
     '''
-    This is AES-CCM-128 implementation for 1609.2 v3
+    AES-CCM-128 implementation as per 1609.2 v3
     It is based on NIST SP 800-38C (and RFC 3610) with the following:
     - Adata = 0, i.e. no associated authenticated data
     - t=16, i.e. tag length is 16 octets
     - n=12, i.e. Nonce length is 12 octets
     - q=3, i.e. the message length in octets is encoded in 3 octets
 
-    Inputs:
+    Encryption Inputs:
     - key:       {octet string} AES-CCM key, K (hex encoded bytes)
     - nonce:     {octet string} nonce, N (hex encoded bytes)
     - plaintext: {octet string} plaintext to be encrypted and authenticated, P (hex encoded bytes)
 
-    Output:
+    Encryption Output:
     ciphertext || tag = C || T {octet string}
     '''
 
@@ -135,6 +135,18 @@ def aes_ccm_enc(key, nonce, msg):
     return C+U
 
 def aes_ccm_dec(key, nonce, ctxt):
+    '''
+    Decryption Inputs:
+    - key:       {octet string} AES-CCM key, K (hex encoded bytes)
+    - nonce:     {octet string} nonce, N (hex encoded bytes)
+    - ciphertext || tag:
+                 {octet string} ciphertext to be decrypted and authenticated,
+                                concatenated with the authentication tag, C || T (hex encoded bytes)
+
+    Decryption Output:
+    plaintext: {octet string} decrypted ciphertext only if the authentication tag computed matches the input tag, P
+    '''
+
     aes128_blk_len = 128/8
     key_len = 128/8
     tag_len = 16
@@ -229,12 +241,12 @@ It is based on NIST SP 800-38C (and RFC 3610) with the following:
 - n=12, i.e. Nonce length is 12 octets
 - q=3, i.e. the message length in octets is encoded in 3 octets
 
-Inputs:
+Encryption Inputs:
 - key:       {octet string} AES-CCM key, K (hex encoded bytes)
 - nonce:     {octet string} nonce, N (hex encoded bytes)
 - plaintext: {octet string} plaintext to be encrypted and authenticated, P (hex encoded bytes)
 
-Output:
+Encryption Output:
 ciphertext || tag = C || T {octet string}
 """)
 
