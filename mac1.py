@@ -112,12 +112,6 @@ known_tag7 = "9b09ffa71b942fcb27635fbcd5b0e944bfdc63644f0713938a7f51535c3a35e2"
 if known_tag7 != hmac.new(known_key7.decode("hex"), known_msg7.decode("hex"), sha256).hexdigest():
 	raise Exception("Known HMAC #7 doesn't match!")
 
-print("""
-Test vectors for MAC1 with SHA-256 (i.e., HMAC-SHA-256) 
-=======================================================
-Inputs: authentication key (K), message to be authenticated (M)
-Output: Tag (T) of size 128 bits, i.e. 16 octets
-""")
 
 key_list = [known_key1, known_key2, known_key3, known_key4, known_key5, known_key6, known_key7]
 msg_list = [known_msg1, known_msg2, known_msg3, known_msg4, known_msg5, known_msg6, known_msg7]
@@ -126,6 +120,12 @@ tag_list = [known_tag1, known_tag2, known_tag3, known_tag4, known_tag5, known_ta
 # Tests (only runing them when invoked directly, but not when importing it)
 #
 if __name__ == '__main__':
+    print("""
+Test vectors for MAC1 with SHA-256 (i.e., HMAC-SHA-256) 
+=======================================================
+Inputs: authentication key (K), message to be authenticated (M)
+Output: Tag (T) of size 128 bits, i.e. 16 octets
+""")
     i = 1
     for key, msg, tag in zip(key_list, msg_list, tag_list):
 

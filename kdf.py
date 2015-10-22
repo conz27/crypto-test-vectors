@@ -76,12 +76,6 @@ known_ss4 = "7e335afa4b31d772c0635c7b0e06f26fcd781df947d2990a"
 known_kdp4 = "d65a4812733f8cdbcdfb4b2f4c191d87"
 known_key4 = "c0bd9e38a8f9de14c2acd35b2f3410c6988cf02400543631e0d6a4c1d030365acbf398115e51aaddebdc9590664210f9aa9fed770d4c57edeafa0b8c14f93300865251218c262d63dadc47dfa0e0284826793985137e0a544ec80abf2fdf5ab90bdaea66204012efe34971dc431d625cd9a329b8217cc8fd0d9f02b13f2f6b0b"
 
-print("""
-Test vectors for KDF2
-=====================
-Inputs: shared secret (ss), key derivation parameter (kdp), desired octet string length (dl)
-Output: derived key of length dl octets
-""")
 
 ss_list  = [known_ss1, known_ss2, known_ss3, known_ss4]
 kdp_list = [known_kdp1, known_kdp2, known_kdp3, known_kdp4]
@@ -90,6 +84,12 @@ key_list = [known_key1, known_key2, known_key3, known_key4]
 # Tests (only runing them when invoked directly, but not when importing it)
 #
 if __name__ == '__main__':
+    print("""
+Test vectors for KDF2
+=====================
+Inputs: shared secret (ss), key derivation parameter (kdp), desired octet string length (dl)
+Output: derived key of length dl octets
+""")
     i = 1
     for ss, kdp, key in zip(ss_list, kdp_list, key_list):
         dl = len(key)/2

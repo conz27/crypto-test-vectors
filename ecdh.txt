@@ -1,3 +1,9 @@
+
+Test vectors for ECDH 
+=====================
+Inputs: A's private key (a), B's public key (B = (Bx, By))
+Output: Shared secret, Z
+
 Test Vector #1:
 ---------------
 a = 0x7d7dc5f71eb29ddaf80d6214632eeae03d9058af1fb6d22ed80badb62bc1a534

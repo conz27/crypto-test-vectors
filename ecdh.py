@@ -237,7 +237,12 @@ Z_lst  = [ ZIUT0, ZIUT1, ZIUT2, ZIUT3, ZIUT4, ZIUT5, ZIUT6, ZIUT7, ZIUT8, ZIUT9,
 # Tests (only runing them when invoked directly, but not when importing it)
 #
 if __name__ == '__main__':
-
+    print("""
+Test vectors for ECDH 
+=====================
+Inputs: A's private key (a), B's public key (B = (Bx, By))
+Output: Shared secret, Z
+""")
     i = 1
     for Ad, Bx, By, Zi in zip(Ad_lst, Bx_lst, By_lst, Z_lst):
         a = "{0:0>{width}x}".format(Ad, width=bitLen(genP256.ecc.n)/4)
