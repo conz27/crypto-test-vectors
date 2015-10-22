@@ -235,6 +235,12 @@ class ECPoint:
     def __str__(self):
         return "[" + hex(self.x) + "], [" + hex(self.y) + "]"
 
+    def __eq__(self, other):
+        if self is other:
+            return True
+        else:
+            return self.x == other.x and self.y == other.y
+
     def is_on_curve(self):
         """Checking that (x,y) is on the curve: y^2 = x^3 + a*x + b"""
         if not ((self.y ** 2 - self.x ** 3 - self.ecc.a * self.x - self.ecc.b) % self.ecc.p) == 0:
@@ -415,6 +421,12 @@ class ECPointJ:
     #      return self.multiply(left)
     def __str__(self):
         return "[" + hex(self.x) + "], [" + hex(self.y) + "], [" + hex(self.z) + "]"
+
+    def __eq__(self, other):
+        if self is other:
+            return True
+        else:
+            return self.x == other.x and self.y == other.y
 
     def is_on_curve(self):
         """Checking that (x,y,z) is on the curve: y^2 = x^3 + a*x*z^4 + b*z^6"""
@@ -656,8 +668,7 @@ if __name__ == '__main__':
         raise Exception("Failed!")
 
     # Testing that 3*3*P, is the same as 9*P
-    left = 3 * genP256
-    left *= 3
+    left = 3 * 3 * genP256
     right = 9 * genP256
     if left != right:
         raise Exception("Failed!")
