@@ -4,7 +4,7 @@ Test vectors for KDF2
 Inputs: shared secret (ss), key derivation parameter (kdp), desired octet string length (dl)
 Output: derived key of length dl octets
 
-Test Vector #2:
+Test Vector #1:
 ---------------
 ss = 0x96c05619d56c328ab95fe84b18264b08725b85e33fd34f08
  ss[24] = 
@@ -16,7 +16,7 @@ kdp = ""
 dl = 16 octets
 
 
-Test Vector #3:
+Test Vector #2:
 ---------------
 ss = 0x96f600b73ad6ac5629577eced51743dd2c24c21b1ac83ee4
  ss[24] = 
@@ -28,7 +28,7 @@ kdp = ""
 dl = 16 octets
 
 
-Test Vector #4:
+Test Vector #3:
 ---------------
 ss = 0x22518b10e70f2a3f243810ae3254139efbee04aa57c7af7d
  ss[24] = 
@@ -42,7 +42,7 @@ kdp = 0x75eef81aa3041e33b80971203d2c0c52
 dl = 128 octets
 
 
-Test Vector #5:
+Test Vector #4:
 ---------------
 ss = 0x7e335afa4b31d772c0635c7b0e06f26fcd781df947d2990a
  ss[24] = 

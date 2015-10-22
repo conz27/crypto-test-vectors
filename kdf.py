@@ -86,25 +86,29 @@ Output: derived key of length dl octets
 ss_list  = [known_ss1, known_ss2, known_ss3, known_ss4]
 kdp_list = [known_kdp1, known_kdp2, known_kdp3, known_kdp4]
 key_list = [known_key1, known_key2, known_key3, known_key4]
-i = 1
-for ss, kdp, key in zip(ss_list, kdp_list, key_list):
-    dl = len(key)/2
-    kdf_out = sha256_kdf(ss, kdp, dl)
-    assert kdf_out == key, "error in kdf"
-    i += 1
+#
+# Tests (only runing them when invoked directly, but not when importing it)
+#
+if __name__ == '__main__':
+    i = 1
+    for ss, kdp, key in zip(ss_list, kdp_list, key_list):
+        dl = len(key)/2
+        kdf_out = sha256_kdf(ss, kdp, dl)
+        assert kdf_out == key, "error in kdf"
 
-    print("Test Vector #" + str(i) + ":")
-    print("---------------")
-    # print shared secret
-    print("ss = 0x" + ss)
-    cArrayDef("", "ss", long(ss, 16), len(ss)/2, radix_8, False); print(os.linesep)
-    
-    #print key derivation parameter
-    if (kdp == ""):
-        print("kdp = \"\""); print()
-    else:
-        print("kdp = 0x" + kdp)
-        cArrayDef("", "kdp", long(kdp, 16), len(kdp)/2, radix_8, False); print(os.linesep)
+        print("Test Vector #" + str(i) + ":")
+        print("---------------")
+        # print shared secret
+        print("ss = 0x" + ss)
+        cArrayDef("", "ss", long(ss, 16), len(ss)/2, radix_8, False); print(os.linesep)
 
-    #print desired length
-    print("dl = " + str(dl) + " octets"); print(os.linesep)
+        #print key derivation parameter
+        if (kdp == ""):
+            print("kdp = \"\""); print()
+        else:
+            print("kdp = 0x" + kdp)
+            cArrayDef("", "kdp", long(kdp, 16), len(kdp)/2, radix_8, False); print(os.linesep)
+
+        #print desired length
+        print("dl = " + str(dl) + " octets"); print(os.linesep)
+        i += 1
