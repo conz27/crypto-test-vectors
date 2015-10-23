@@ -891,7 +891,9 @@ if __name__ == '__main__':
     dgst = int(sha256(msg).hexdigest(), 16)
     dgst_v = 0xA41A41A12A799548211C410C65D8133AFDE34D28BDD542E4B680CF2899C8A8C4
     if dgst_v != dgst:
-        raise Exception("Digest from vector is not correct")
+        raise Exception("FAIL: ECDSA digest from vector is not correct")
+    else:
+        print("PASS: ECDSA digest from vector is correct")
 
     # Long-term key pair
     d_v = 0xC477F9F65C22CCE20657FAA5B2D1D8122336F851A508A1ED04E479C34985BF96
@@ -899,14 +901,18 @@ if __name__ == '__main__':
     Q_y_v = 0x3603F747959DBF7A4BB226E41928729063ADC7AE43529E61B563BBC606CC5E09
     Q = d_v * genP256
     if Q_x_v != Q.x or Q_y_v != Q.y:
-        raise Exception("Public key not as in NIST vector")
+        raise Exception("FAIL: Public key not as in NIST vector")
+    else:
+        print("PASS: Public key as in NIST vector")
 
     # Ephemeral point
     k_v = 0x7A1A7E52797FC8CAAA435D2A4DACE39158504BF204FBE19F14DBB427FAEE50AE
     R = k_v * genP256
     R_x_v = 0x2B42F576D07F4165FF65D1F3B1500F81E44C316F1F0B3EF57325B69ACA46104F
     if R_x_v != R.x:  # This check is redundant as it will be checked as part of the signature
-        raise Exception("Ephemeral pulic key not as in NIST vector")
+        raise Exception("FAIL: Ephemeral public key not as in NIST vector")
+    else:
+        print("PASS: Ephemeral public key as in NIST vector")
 
     # Signature
     r_v = 0x2B42F576D07F4165FF65D1F3B1500F81E44C316F1F0B3EF57325B69ACA46104F
@@ -914,6 +920,8 @@ if __name__ == '__main__':
     to_sign = ECDSA(256, Q, d_v)
     (r, s) = to_sign.sign_k(k_v, dgst_v)
     if r_v != r or s_v != s:
-        raise Exception("Signature does not match vector: FAILURE")
+        raise Exception("FAIL: Signature does not match vector")
+    else:
+        print("PASS: Signature matches vector")
 
-    print("Passed!")
+    print("ALL TESTS PASS!")
