@@ -1,5 +1,8 @@
 from random import *
 from hashlib import *
+
+import base64
+
 from radix import Hex
 # import math
 
@@ -64,9 +67,9 @@ def modinv(a, m):
 
 def pow_mod(x, y, z):
     """Calculate (x ** y) % z efficiently."""
-    print("pow_mod(x): %s" % Hex(x, 16))
-    print("pow_mod(y): %s" % Hex(y, 16))
-    print("pow_mod(z): %s" % Hex(z, 16))
+    # print("pow_mod(x): %s" % Hex(x, 16))
+    # print("pow_mod(y): %s" % Hex(y, 16))
+    # print("pow_mod(z): %s" % Hex(z, 16))
     acc = 1
     while y:
         if y & 1:
@@ -77,7 +80,7 @@ def pow_mod(x, y, z):
 
 
 def sqrt(a, m):
-    return pow_mod(a, (m + 1) / 4, m)
+    return pow_mod(a, (m + 1) // 4, m)
 
 
 #
@@ -320,9 +323,7 @@ class ECPoint:
         """Output with/without point compression"""
         self.is_on_curve()
         l = bitLen(self.ecc.p)
-        print("output/l = %d" % l)
         os_len = 2 * ((l -1) // 8 + 1)
-        print("output/os_len = %d" % os_len)
         if compress:
             if testBit(self.y, 0) != 0:
                 flag = "03"
@@ -336,10 +337,7 @@ class ECPoint:
     def input(self, os):
         """Input octet string and convert to ECPoint"""
         l = bitLen(self.ecc.p)
-        print("input/l = %d" % l)
-        print("input/len(os) (includes 2 bytes flag) == %d" % len(os))
         os_len = 2 * ((l -1) // 8 + 1)
-        print("input/os_len == %d" % os_len)
         # Compressed
         if os_len == (len(os) - 2):
             flag = os[0:2]
@@ -347,7 +345,7 @@ class ECPoint:
                 raise Exception("Bad octet string flag!")
             self.x = int(os[2:(2 + os_len)], 16)
             self.y = (self.x ** 3 + self.ecc.a * self.x + self.ecc.b) % self.ecc.p
-            self.y = sqrt(self.y, self.ecc.p)
+            self.y = sqrt(int(self.y), self.ecc.p)
             if (testBit(self.y, 0) != 0 and flag == "02") or (testBit(self.y, 0) == 0 and flag == "03"):
                 self.y = self.ecc.p - self.y
             self.is_on_curve()
@@ -854,14 +852,8 @@ if __name__ == '__main__':
         k = randint(1, genP256.ecc.n - 1)
         orig = k * genP256
 
-        print("genP256.ecc.n = %s" % Hex(genP256.ecc.n, 16))
-        print("k = %s" % Hex(k, 16))
-        print("orig = %s" % orig)
-
         # with compression
         os = orig.output()
-        print(os)
-
         new = ECPoint(secp256r1, os)
         if new != orig:
             raise Exception("FAIL: Testing octet string conversion with compression #%d" % testNum)
@@ -872,56 +864,56 @@ if __name__ == '__main__':
         os = orig.output(False)
         new = ECPoint(secp256r1, os)
         if new != orig:
-            raise Exception("FAIL: Testing octet string conversion without compression #%d" % i)
+            raise Exception("FAIL: Testing octet string conversion without compression #%d" % testNum)
         else:
-            print("PASS: Testing octet string conversion without compression #%d" % i)
+            print("PASS: Testing octet string conversion without compression #%d" % testNum)
 
     #  Comment out ECDSA for now
 
-    # # Testing ECDSA-256 sign/verify
-    # digest = getrandbits(256)
-    # prv_key = randint(1, genP256.ecc.n - 1)
-    # pub_key = prv_key * genP256
-    # to_sign = ECDSA(256, pub_key, prv_key)
-    # to_verify = ECDSA(256, pub_key)
-    # (r, s) = to_sign.sign(digest)
-    # if not to_verify.verify(digest, r, s):
-    #     raise Exception("ECDSA failed!")
-    #
-    # # Testing ECDSA-256 sign/verify
-    # # test vector from NIST: engdocs/testvectors/ECDSA_Prime.pdf
-    #
-    # # Digest
-    # # digest is verified to be the output of SHA-256 as follows:
-    # from hashlib import sha256
-    #
-    # msg = "Example of ECDSA with P-256"
-    # dgst = int(sha256(msg).hexdigest(), 16)
-    # dgst_v = 0xA41A41A12A799548211C410C65D8133AFDE34D28BDD542E4B680CF2899C8A8C4
-    # if dgst_v != dgst:
-    #     raise Exception("Digest from vector is not correct")
-    #
-    # # Long-term key pair
-    # d_v = 0xC477F9F65C22CCE20657FAA5B2D1D8122336F851A508A1ED04E479C34985BF96
-    # Q_x_v = 0xB7E08AFDFE94BAD3F1DC8C734798BA1C62B3A0AD1E9EA2A38201CD0889BC7A19
-    # Q_y_v = 0x3603F747959DBF7A4BB226E41928729063ADC7AE43529E61B563BBC606CC5E09
-    # Q = d_v * genP256
-    # if Q_x_v != Q.x or Q_y_v != Q.y:
-    #     raise Exception("Public key not as in NIST vector")
-    #
-    # # Ephemeral point
-    # k_v = 0x7A1A7E52797FC8CAAA435D2A4DACE39158504BF204FBE19F14DBB427FAEE50AE
-    # R = k_v * genP256
-    # R_x_v = 0x2B42F576D07F4165FF65D1F3B1500F81E44C316F1F0B3EF57325B69ACA46104F
-    # if R_x_v != R.x:  # This check is redundant as it will be checked as part of the signature
-    #     raise Exception("Ephemeral pulic key not as in NIST vector")
-    #
-    # # Signature
-    # r_v = 0x2B42F576D07F4165FF65D1F3B1500F81E44C316F1F0B3EF57325B69ACA46104F
-    # s_v = 0xDC42C2122D6392CD3E3A993A89502A8198C1886FE69D262C4B329BDB6B63FAF1
-    # to_sign = ECDSA(256, Q, d_v)
-    # (r, s) = to_sign.sign_k(k_v, dgst_v)
-    # if r_v != r or s_v != s:
-    #     raise Exception("Signature does not match vector: FAILURE")
-    #
-    # print("Passed!")
+    # Testing ECDSA-256 sign/verify
+    digest = getrandbits(256)
+    prv_key = randint(1, genP256.ecc.n - 1)
+    pub_key = prv_key * genP256
+    to_sign = ECDSA(256, pub_key, prv_key)
+    to_verify = ECDSA(256, pub_key)
+    (r, s) = to_sign.sign(digest)
+    if not to_verify.verify(digest, r, s):
+        raise Exception("ECDSA failed!")
+
+    # Testing ECDSA-256 sign/verify
+    # test vector from NIST: engdocs/testvectors/ECDSA_Prime.pdf
+
+    # Digest
+    # digest is verified to be the output of SHA-256 as follows:
+    from hashlib import sha256
+
+    msg = "Example of ECDSA with P-256".encode()
+    dgst = int(sha256(msg).hexdigest(), 16)
+    dgst_v = 0xA41A41A12A799548211C410C65D8133AFDE34D28BDD542E4B680CF2899C8A8C4
+    if dgst_v != dgst:
+        raise Exception("Digest from vector is not correct")
+
+    # Long-term key pair
+    d_v = 0xC477F9F65C22CCE20657FAA5B2D1D8122336F851A508A1ED04E479C34985BF96
+    Q_x_v = 0xB7E08AFDFE94BAD3F1DC8C734798BA1C62B3A0AD1E9EA2A38201CD0889BC7A19
+    Q_y_v = 0x3603F747959DBF7A4BB226E41928729063ADC7AE43529E61B563BBC606CC5E09
+    Q = d_v * genP256
+    if Q_x_v != Q.x or Q_y_v != Q.y:
+        raise Exception("Public key not as in NIST vector")
+
+    # Ephemeral point
+    k_v = 0x7A1A7E52797FC8CAAA435D2A4DACE39158504BF204FBE19F14DBB427FAEE50AE
+    R = k_v * genP256
+    R_x_v = 0x2B42F576D07F4165FF65D1F3B1500F81E44C316F1F0B3EF57325B69ACA46104F
+    if R_x_v != R.x:  # This check is redundant as it will be checked as part of the signature
+        raise Exception("Ephemeral pulic key not as in NIST vector")
+
+    # Signature
+    r_v = 0x2B42F576D07F4165FF65D1F3B1500F81E44C316F1F0B3EF57325B69ACA46104F
+    s_v = 0xDC42C2122D6392CD3E3A993A89502A8198C1886FE69D262C4B329BDB6B63FAF1
+    to_sign = ECDSA(256, Q, d_v)
+    (r, s) = to_sign.sign_k(k_v, dgst_v)
+    if r_v != r or s_v != s:
+        raise Exception("Signature does not match vector: FAILURE")
+
+    print("Passed!")
