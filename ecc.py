@@ -1,5 +1,6 @@
 from random import *
 from hashlib import *
+import math
 
 
 #
@@ -62,6 +63,9 @@ def modinv(a, m):
 
 def pow_mod(x, y, z):
     """Calculate (x ** y) % z efficiently."""
+    print(x)
+    print(y)
+    print(z)
     acc = 1
     while y:
         if y & 1:
@@ -315,20 +319,26 @@ class ECPoint:
         """Output with/without point compression"""
         self.is_on_curve()
         l = bitLen(self.ecc.p)
-        os_len = 2 * ((l - 1) / 8 + 1)
+        print("output/l = %d" % l)
+        os_len = 2 * math.floor(((l - 1) / 8) + 1)
+        print("output/os_len = %d" % os_len)
         if compress:
             if testBit(self.y, 0) != 0:
                 flag = "03"
             else:
                 flag = "02"
-            return flag + format(self.x, "x").zfill(os_len)
+            val = flag + format(self.x, "x").zfill(os_len)
+            return val
         else:
             return "04" + format(self.x, "x").zfill(os_len) + format(self.y, "x").zfill(os_len)
 
     def input(self, os):
         """Input octet string and convert to ECPoint"""
         l = bitLen(self.ecc.p)
-        os_len = 2 * ((l - 1) / 8 + 1)
+        print("input/l = %d" % l)
+        print("input/len(os) (includes 2 bytes flag) == %d" % len(os))
+        os_len = 2 * math.floor(((l - 1) / 8) + 1)
+        print("input/os_len == %d" % os_len)
         # Compressed
         if os_len == (len(os) - 2):
             flag = os[0:2]
@@ -653,7 +663,10 @@ if __name__ == '__main__':
     right = right + genP256
     right = right + genP256
     if left != right:
-        raise Exception("Failed!")
+        raise Exception("FAIL: Testing add() and double()")
+    else:
+        print("PASS: Testing add() and double()")
+
 
     # Testing that 2*P, is the same as P+P
     left = 2 * genP256
@@ -795,8 +808,10 @@ if __name__ == '__main__':
     for i in range(10):
         k = randint(1, genP256.ecc.n - 1)
         orig = k * genP256
+        print(orig)
         # with compression
         os = orig.output()
+        print(os)
         new = ECPoint(secp256r1, os)
         if new != orig:
             raise Exception("Failed!")
