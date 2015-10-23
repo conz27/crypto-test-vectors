@@ -1,12 +1,6 @@
 from random import *
 from hashlib import *
 
-import base64
-
-from radix import Hex
-# import math
-
-
 #
 # Bit operations
 #
@@ -67,9 +61,6 @@ def modinv(a, m):
 
 def pow_mod(x, y, z):
     """Calculate (x ** y) % z efficiently."""
-    # print("pow_mod(x): %s" % Hex(x, 16))
-    # print("pow_mod(y): %s" % Hex(y, 16))
-    # print("pow_mod(z): %s" % Hex(z, 16))
     acc = 1
     while y:
         if y & 1:
