@@ -192,7 +192,7 @@ class ECCTests(unittest.TestCase):
         self.assertEqual(Q_x_v, Q.x)
         self.assertEqual(Q_y_v, Q.y)
 
-    def test_ecdsa_emphemeral_point(self):
+    def test_ecdsa_ephemeral_point(self):
         k_v = 0x7A1A7E52797FC8CAAA435D2A4DACE39158504BF204FBE19F14DBB427FAEE50AE
         R = k_v * self.genP256
         R_x_v = 0x2B42F576D07F4165FF65D1F3B1500F81E44C316F1F0B3EF57325B69ACA46104F
