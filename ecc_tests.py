@@ -209,3 +209,6 @@ class ECCTests(unittest.TestCase):
         (r, s) = to_sign.sign_k(k_v, dgst_v)
         self.assertEqual(r_v, r)
         self.assertEqual(s_v, s)
+
+if __name__ == '__main__':
+    unittest.main()
