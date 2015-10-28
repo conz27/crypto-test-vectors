@@ -1,4 +1,5 @@
 from Crypto.Cipher import AES
+import binascii
 
 from array import *
 from ecc import *
@@ -9,7 +10,7 @@ seed(333)
 
 
 def f_k_int_x(k, x):
-    aes_obj = AES.new(k.decode('hex'), AES.MODE_ECB)
+    aes_obj = AES.new(binascii.unhexlify(k), AES.MODE_ECB)
     s = ""
     for i in range(1, 4):
         print("x+" + str(i) + ": Input to AES block " + str(i) + " encryption (128 bits):")
@@ -19,8 +20,8 @@ def f_k_int_x(k, x):
         print(os.linesep)
 
         print("AES_k(x+" + str(i) + "): Output of AES block " + str(i) + " encryption (128 bits):")
-        aes_xpi = aes_obj.encrypt(xpi.decode('hex')).encode('hex')
-        print("0x" + aes_xpi.upper())
+        aes_xpi = aes_obj.encrypt(binascii.unhexlify(xpi))
+        aes_xpi = binascii.hexlify(aes_xpi)
         cArrayDef("[be]", "aes_xp" + str(i), int(aes_xpi, 16), 128 / 8, radix_8, False)
         print(os.linesep)
 
