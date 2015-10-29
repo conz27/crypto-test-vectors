@@ -11,7 +11,7 @@ genP256 = ECPoint(secp256r1.gx, secp256r1.gy, secp256r1)
 
 
 def implicitCertGen(tbsCert, RU, dCA, k=None):
-    '''
+    """
     Implicit Certificate Generation as per SEC4 Sec 3.4
 
     Inputs:
@@ -32,7 +32,7 @@ def implicitCertGen(tbsCert, RU, dCA, k=None):
                  This was confirmed by William by email on Oct 29, 2015
                Therefore here H(CertU) = H(tbsCert || PU) is just for illustration purposes
     - r:       {octet string} private key reconstruction value
-    '''
+    """
     r_len = 256 / 8
     assert len(dCA) == r_len * 2, "input dCA must be of octet length: " + str(r_len)
     assert RU.is_on_curve(), "User's request public key must be a point on the curve P-256"
@@ -65,7 +65,7 @@ def implicitCertGen(tbsCert, RU, dCA, k=None):
 
 
 def reconstructPrivateKey(kU, CertU, r):
-    '''
+    """
     Implicit Certificate Private Key Reconstruction as per SEC4 Sec. 3.6
 
     Inputs:
@@ -81,7 +81,7 @@ def reconstructPrivateKey(kU, CertU, r):
     QU' = dU*G
     and is verified to be equal to QU calculated by reconstruction (see function below)
     This check is performed in the tests, outside this function.
-    '''
+    """
 
     # e = leftmost floor(log_2 n) bits of SHA-256(CertU)
     e = sha256(CertU.decode('hex')).hexdigest()
@@ -96,7 +96,7 @@ def reconstructPrivateKey(kU, CertU, r):
 
 
 def reconstructPublicKey(CertU, QCA):
-    '''
+    """
     Implicit Certificate Public Key Reconstruction as per SEC4 Sec. 3.5
     Can be performed by any party.
 
@@ -106,7 +106,7 @@ def reconstructPublicKey(CertU, QCA):
 
     Output:
     - QU: {ec256_point} User's (reconstructed) public key
-    '''
+    """
 
     # extract PU,
     # in this script it's the last 33 bytes of CertU, an octet string of a compressed point
