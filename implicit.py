@@ -1,14 +1,14 @@
 from __future__ import print_function
 import os
 from hashlib import sha256
-
 from array import *
 from ecc import *
 
-radix_256 = 2**256
-radix_8 = 2**8
+radix_256 = 2 ** 256
+radix_8 = 2 ** 8
 
 genP256 = ECPoint(secp256r1.gx, secp256r1.gy, secp256r1)
+
 
 def implicitCertGen(tbsCert, RU, dCA, k=None):
     '''
@@ -33,17 +33,17 @@ def implicitCertGen(tbsCert, RU, dCA, k=None):
                Therefore here H(CertU) = H(tbsCert || PU) is just for illustration purposes
     - r:       {octet string} private key reconstruction value
     '''
-    r_len = 256/8
-    assert len(dCA) == r_len*2, "input dCA must be of octet length: " + str(r_len)
+    r_len = 256 / 8
+    assert len(dCA) == r_len * 2, "input dCA must be of octet length: " + str(r_len)
     assert RU.is_on_curve(), "User's request public key must be a point on the curve P-256"
 
     # Generate CA's ephemeral key pair
     if (k == None):
-        k_long = randint(1, genP256.ecc.n-1)
-        k = "{0:0>{width}X}".format(k_long, width=bitLen(genP256.ecc.n)*2/8)
+        k_long = randint(1, genP256.ecc.n - 1)
+        k = "{0:0>{width}X}".format(k_long, width=bitLen(genP256.ecc.n) * 2 / 8)
     else:
         k_long = int(k, 16)
-    kG = k_long*genP256
+    kG = k_long * genP256
 
     # Compute User's public key reconstruction point, PU
     PU = RU + kG
@@ -57,11 +57,12 @@ def implicitCertGen(tbsCert, RU, dCA, k=None):
     # e = leftmost floor(log_2 n) bits of SHA-256(CertU), i.e.
     # e = Shiftright(SHA-256(CertU)) by 1 bit
     e = sha256(CertU.decode('hex')).hexdigest()
-    e_long = int(e, 16)/2
+    e_long = int(e, 16) / 2
 
     r_long = (e_long * k_long + int(dCA, 16)) % genP256.ecc.n
-    r = "{0:0>{width}X}".format(r_long, width=bitLen(genP256.ecc.n)*2/8)
+    r = "{0:0>{width}X}".format(r_long, width=bitLen(genP256.ecc.n) * 2 / 8)
     return PU, CertU, r
+
 
 def reconstructPrivateKey(kU, CertU, r):
     '''
@@ -84,14 +85,15 @@ def reconstructPrivateKey(kU, CertU, r):
 
     # e = leftmost floor(log_2 n) bits of SHA-256(CertU)
     e = sha256(CertU.decode('hex')).hexdigest()
-    e_long = long(e, 16)/2
+    e_long = long(e, 16) / 2
 
     # Compute U's private key
     # dU = (e * kU + r) mod n
     dU_long = (e_long * long(kU, 16) + long(r, 16)) % genP256.ecc.n
-    dU = "{0:0>{width}X}".format(dU_long, width=bitLen(genP256.ecc.n)*2/8)
+    dU = "{0:0>{width}X}".format(dU_long, width=bitLen(genP256.ecc.n) * 2 / 8)
 
     return dU
+
 
 def reconstructPublicKey(CertU, QCA):
     '''
@@ -108,7 +110,7 @@ def reconstructPublicKey(CertU, QCA):
 
     # extract PU,
     # in this script it's the last 33 bytes of CertU, an octet string of a compressed point
-    PU_os = CertU[-33*2:]
+    PU_os = CertU[-33 * 2:]
 
     # convert PU_os to an ec256_point
     PU = ECPoint(secp256r1, PU_os)
@@ -116,14 +118,15 @@ def reconstructPublicKey(CertU, QCA):
     # e = leftmost floor(log_2 n) bits of SHA-256(CertU)
     # Read note above about what is actually the input to SHA-256
     e = sha256(CertU.decode('hex')).hexdigest()
-    e_long = long(e, 16)/2
+    e_long = long(e, 16) / 2
 
     # Compute U's public key
-    QU = e_long*PU + QCA
+    QU = e_long * PU + QCA
 
     return QU
 
-k =  "E2F9CBCEC3F28F7DFBEF044732C41119816C62909FB720B091FB8F380F1B70DC"
+
+k = "E2F9CBCEC3F28F7DFBEF044732C41119816C62909FB720B091FB8F380F1B70DC"
 tbsCert = "54686973206973206120746573742100"
 kU = "1384C31D6982D52BCA3BED8A7E60F52FECDAB44E5C0EA166815A8159E09FFB42"
 RUx = "F45A99137B1BB2C150D6D8CF7292CA07DA68C003DAA766A9AF7F67F5EE916828"
@@ -146,6 +149,5 @@ QCA = ECPoint(int(QCAx, 16), int(QCAy, 16), secp256r1)
 QU = reconstructPublicKey(CertU, QCA)
 print("QU =", QU)
 
-QU_ = int(dU, 16)*genP256
+QU_ = int(dU, 16) * genP256
 assert QU_ == QU, "Reconstructed private key does not correspond to reconstructed public key"
-
