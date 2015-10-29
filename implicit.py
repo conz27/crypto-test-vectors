@@ -42,7 +42,7 @@ def implicitCertGen(tbsCert, RU, dCA, k=None):
         k_long = randint(1, genP256.ecc.n-1)
         k = "{0:0>{width}X}".format(k_long, width=bitLen(genP256.ecc.n)*2/8)
     else:
-        k_long = long(k, 16)
+        k_long = int(k, 16)
     kG = k_long*genP256
 
     # Compute User's public key reconstruction point, PU
@@ -57,9 +57,9 @@ def implicitCertGen(tbsCert, RU, dCA, k=None):
     # e = leftmost floor(log_2 n) bits of SHA-256(CertU), i.e.
     # e = Shiftright(SHA-256(CertU)) by 1 bit
     e = sha256(CertU.decode('hex')).hexdigest()
-    e_long = long(e, 16)/2
+    e_long = int(e, 16)/2
 
-    r_long = (e_long * k_long + long(dCA, 16)) % genP256.ecc.n
+    r_long = (e_long * k_long + int(dCA, 16)) % genP256.ecc.n
     r = "{0:0>{width}X}".format(r_long, width=bitLen(genP256.ecc.n)*2/8)
     return PU, CertU, r
 
@@ -132,7 +132,7 @@ dCA = "97D1368E8C07A54F66C9DCE284BA76CAF4178206614F809A4EB43CB3106AA60E"
 QCAx = "3BB8FFD19B25EE1BB939CD4935FBFA8FBAADBA64843338A95595A70ED7479B70"
 QCAy = "EB60DDC790E3CB05E85225F636D8A7C20DF3A8135C4B2AE5396367B4E86077F8"
 
-RU = ECPoint(long(RUx, 16), long(RUy, 16), secp256r1)
+RU = ECPoint(int(RUx, 16), int(RUy, 16), secp256r1)
 PU, CertU, r = implicitCertGen(tbsCert, RU, dCA, k=k)
 
 print("PU =", PU)
@@ -142,10 +142,10 @@ print("r = " + r)
 dU = reconstructPrivateKey(kU, CertU, r)
 print("dU =", dU)
 
-QCA = ECPoint(long(QCAx, 16), long(QCAy, 16), secp256r1)
+QCA = ECPoint(int(QCAx, 16), int(QCAy, 16), secp256r1)
 QU = reconstructPublicKey(CertU, QCA)
 print("QU =", QU)
 
-QU_ = long(dU, 16)*genP256
+QU_ = int(dU, 16)*genP256
 assert QU_ == QU, "Reconstructed private key does not correspond to reconstructed public key"
 
