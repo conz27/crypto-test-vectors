@@ -85,11 +85,11 @@ def reconstructPrivateKey(kU, CertU, r):
 
     # e = leftmost floor(log_2 n) bits of SHA-256(CertU)
     e = sha256(CertU.decode('hex')).hexdigest()
-    e_long = long(e, 16) / 2
+    e_long = int(e, 16) / 2
 
     # Compute U's private key
     # dU = (e * kU + r) mod n
-    dU_long = (e_long * long(kU, 16) + long(r, 16)) % genP256.ecc.n
+    dU_long = (e_long * int(kU, 16) + int(r, 16)) % genP256.ecc.n
     dU = "{0:0>{width}X}".format(dU_long, width=bitLen(genP256.ecc.n) * 2 / 8)
 
     return dU
@@ -118,7 +118,7 @@ def reconstructPublicKey(CertU, QCA):
     # e = leftmost floor(log_2 n) bits of SHA-256(CertU)
     # Read note above about what is actually the input to SHA-256
     e = sha256(CertU.decode('hex')).hexdigest()
-    e_long = long(e, 16) / 2
+    e_long = int(e, 16) / 2
 
     # Compute U's public key
     QU = e_long * PU + QCA
