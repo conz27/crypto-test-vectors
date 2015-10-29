@@ -54,7 +54,8 @@ def implicitCertGen(tbsCert, RU, dCA, k=None):
     # CertU = tbsCert || PU (see note above)
     CertU = tbsCert + PU_os
 
-    # e = leftmost floor(log_2 n) bits of SHA-256(CertU)
+    # e = leftmost floor(log_2 n) bits of SHA-256(CertU), i.e.
+    # e = Shiftright(SHA-256(CertU)) by 1 bit
     e = sha256(CertU.decode('hex')).hexdigest()
     e_long = long(e, 16)/2
 
