@@ -5,38 +5,6 @@ from array import *
 from ecc import *
 import os
 
-# Uncomment the following to obtain different values every time this script is run
-seed(333)
-
-
-def f_k_int_x(k, x):
-    aes_obj = AES.new(binascii.unhexlify(k), AES.MODE_ECB)
-    s = ""
-    for i in range(1, 4):
-        print("x+" + str(i) + ": Input to AES block " + str(i) + " encryption (128 bits):")
-        xpi = "{0:032X}".format(x + i)
-        print("0x" + xpi)
-        cArrayDef("[be]", "xp" + str(i), int(xpi, 16), 128 / 8, radix_8, False)
-        print(os.linesep)
-
-        print("AES_k(x+" + str(i) + "): Output of AES block " + str(i) + " encryption (128 bits):")
-        aes_xpi = aes_obj.encrypt(binascii.unhexlify(xpi))
-        aes_xpi = binascii.hexlify(aes_xpi)
-        cArrayDef("[be]", "aes_xp" + str(i), int(aes_xpi, 16), 128 / 8, radix_8, False)
-        print(os.linesep)
-
-        print("AES_k(x+" + str(i) + ") XOR (x+" + str(i) + "): block " + str(i) + " (128 bits):")
-        blki_int = int(xpi, 16) ^ int(aes_xpi, 16)
-        blki = "{0:032X}".format(blki_int)
-        print("0x" + blki)
-        cArrayDef("[be]", "block_" + str(i), blki_int, 128 / 8, radix_8, False)
-        print(os.linesep)
-
-        s += blki
-
-    return s.upper()
-
-
 radix_256 = 2 ** 256
 radix_128 = 2 ** 128
 radix_32 = 2 ** 32
@@ -44,6 +12,40 @@ radix_16 = 2 ** 16
 radix_8 = 2 ** 8
 
 genP256 = ECPoint(secp256r1.gx, secp256r1.gy, secp256r1)
+
+# Uncomment the following to obtain different values every time this script is run
+seed(333)
+
+
+class BFKeyExpansion:
+    @staticmethod
+    def f_k_int_x(k, x):
+        aes_obj = AES.new(binascii.unhexlify(k), AES.MODE_ECB)
+        s = ""
+        for i in range(1, 4):
+            print("x+" + str(i) + ": Input to AES block " + str(i) + " encryption (128 bits):")
+            xpi = "{0:032X}".format(x + i)
+            print("0x" + xpi)
+            cArrayDef("[be]", "xp" + str(i), int(xpi, 16), 128 / 8, radix_8, False)
+            print(os.linesep)
+
+            print("AES_k(x+" + str(i) + "): Output of AES block " + str(i) + " encryption (128 bits):")
+            aes_xpi = aes_obj.encrypt(binascii.unhexlify(xpi))
+            aes_xpi = binascii.hexlify(aes_xpi)
+            cArrayDef("[be]", "aes_xp" + str(i), int(aes_xpi, 16), 128 / 8, radix_8, False)
+            print(os.linesep)
+
+            print("AES_k(x+" + str(i) + ") XOR (x+" + str(i) + "): block " + str(i) + " (128 bits):")
+            blki_int = int(xpi, 16) ^ int(aes_xpi, 16)
+            blki = "{0:032X}".format(blki_int)
+            print("0x" + blki)
+            cArrayDef("[be]", "block_" + str(i), blki_int, 128 / 8, radix_8, False)
+            print(os.linesep)
+
+            s += blki
+
+        return s.upper()
+
 
 a = randint(1, genP256.ecc.n - 1)
 A = a * genP256
@@ -100,7 +102,7 @@ print("}" + os.linesep)
 print("x_cert: Expansion function input for Certificate keys (128 bits):")
 print(Hex(x_cert, radix_128) + os.linesep)
 
-f_k_int_x_cert = f_k_int_x(ck, x_cert)
+f_k_int_x_cert = BFKeyExpansion.f_k_int_x(ck, x_cert)
 print("f_k^{int}(x) = block1 || block2 || block3 (384 bits):")
 print("0x" + f_k_int_x_cert)
 cArrayDef("[be]", "f_k_int_x_cert", int(f_k_int_x_cert, 16), 384 / 8, radix_8, False)
@@ -156,7 +158,7 @@ print("}" + os.linesep)
 print("x_enc: Expansion function input for Encryption keys (128 bits):")
 print(Hex(x_enc, radix_128) + os.linesep)
 
-f_k_int_x_enc = f_k_int_x(ek, x_enc)
+f_k_int_x_enc = BFKeyExpansion.f_k_int_x(ek, x_enc)
 print("f_k^{int}(x) = block1 || block2 || block3 (384 bits):")
 print("0x" + f_k_int_x_enc)
 cArrayDef("[be]", "f_k_int_x_enc", int(f_k_int_x_enc, 16), 384 / 8, radix_8, False)
