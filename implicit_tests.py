@@ -39,7 +39,7 @@ class ImplicitCertUtilTests(unittest.TestCase):
         e = sha256(binascii.unhexlify(self.CertU)).hexdigest()
         r_int = ((int(e, 16) // 2) * int(self.k, 16) + int(self.dCA, 16)) % self.genP256.ecc.n
         r = "{0:0>{width}X}".format(r_int, width=bitLen(genP256.ecc.n) * 2 // 8)
-        self.assertEqual(r, "1FA86893A1AABE8A79F63360F4B6D5617380B4D84B8C260DD8D3D64163C874FD")
+        self.assertEqual(r, self.r)
 
     def test_implicit_certificate_generation(self):
         PU, CertU, r = ImplicitCertUtil.gen_cert(self.tbsCert, self.RU, self.dCA, k=self.k)
