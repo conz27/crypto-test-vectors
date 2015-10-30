@@ -129,32 +129,3 @@ class ImplicitCertUtil:
 
         return QU
 
-
-k = "E2F9CBCEC3F28F7DFBEF044732C41119816C62909FB720B091FB8F380F1B70DC"
-tbsCert = "54686973206973206120746573742100"
-kU = "1384C31D6982D52BCA3BED8A7E60F52FECDAB44E5C0EA166815A8159E09FFB42"
-RUx = "F45A99137B1BB2C150D6D8CF7292CA07DA68C003DAA766A9AF7F67F5EE916828"
-RUy = "F6A25216F44CB64A96C229AE00B479857B3B81C1319FB2ADF0E8DB2681769729"
-dCA = "97D1368E8C07A54F66C9DCE284BA76CAF4178206614F809A4EB43CB3106AA60E"
-QCAx = "3BB8FFD19B25EE1BB939CD4935FBFA8FBAADBA64843338A95595A70ED7479B70"
-QCAy = "EB60DDC790E3CB05E85225F636D8A7C20DF3A8135C4B2AE5396367B4E86077F8"
-
-RU = ECPoint(int(RUx, 16), int(RUy, 16), secp256r1)
-PU, CertU, r = ImplicitCertUtil.gen_cert(tbsCert, RU, dCA, k=k)
-
-# print("PU =", PU)
-# print("CertU = " + CertU)
-# print("r = " + r)
-
-dU = ImplicitCertUtil.reconstruct_private(kU, CertU, r)
-# print("dU =", dU)
-
-QCA = ECPoint(int(QCAx, 16), int(QCAy, 16), secp256r1)
-QU = ImplicitCertUtil.reconstruct_public(CertU, QCA)
-# print("QU =", QU)
-
-QU_ = int(dU, 16) * genP256
-
-assert QU_ == QU, "Reconstructed private key does not correspond to reconstructed public key"
-
-print("SUCCESS: Reconstructed private key corresponds to reconstructed public key")
