@@ -1,7 +1,6 @@
 from __future__ import print_function
-import os
-from hashlib import sha256
-from array import *
+import binascii
+
 from ecc import *
 
 radix_256 = 2 ** 256
@@ -56,11 +55,11 @@ def implicitCertGen(tbsCert, RU, dCA, k=None):
 
     # e = leftmost floor(log_2 n) bits of SHA-256(CertU), i.e.
     # e = Shiftright(SHA-256(CertU)) by 1 bit
-    e = sha256(CertU.decode('hex')).hexdigest()
-    e_long = int(e, 16) / 2
+    e = sha256(binascii.unhexlify(CertU)).hexdigest()
+    e_long = int(e, 16) // 2
 
     r_long = (e_long * k_long + int(dCA, 16)) % genP256.ecc.n
-    r = "{0:0>{width}X}".format(r_long, width=bitLen(genP256.ecc.n) * 2 / 8)
+    r = "{0:0>{width}X}".format(r_long, width=bitLen(genP256.ecc.n) * 2 // 8)
     return PU, CertU, r
 
 
@@ -84,13 +83,13 @@ def reconstructPrivateKey(kU, CertU, r):
     """
 
     # e = leftmost floor(log_2 n) bits of SHA-256(CertU)
-    e = sha256(CertU.decode('hex')).hexdigest()
-    e_long = int(e, 16) / 2
+    e = sha256(binascii.unhexlify(CertU)).hexdigest()
+    e_long = int(e, 16) // 2
 
     # Compute U's private key
     # dU = (e * kU + r) mod n
     dU_long = (e_long * int(kU, 16) + int(r, 16)) % genP256.ecc.n
-    dU = "{0:0>{width}X}".format(dU_long, width=bitLen(genP256.ecc.n) * 2 / 8)
+    dU = "{0:0>{width}X}".format(dU_long, width=bitLen(genP256.ecc.n) * 2 // 8)
 
     return dU
 
@@ -117,8 +116,8 @@ def reconstructPublicKey(CertU, QCA):
 
     # e = leftmost floor(log_2 n) bits of SHA-256(CertU)
     # Read note above about what is actually the input to SHA-256
-    e = sha256(CertU.decode('hex')).hexdigest()
-    e_long = int(e, 16) / 2
+    e = sha256(binascii.unhexlify(CertU)).hexdigest()
+    e_long = int(e, 16) // 2
 
     # Compute U's public key
     QU = e_long * PU + QCA
