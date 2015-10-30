@@ -37,9 +37,10 @@ def implicitCertGen(tbsCert, RU, dCA, k=None):
     assert RU.is_on_curve(), "User's request public key must be a point on the curve P-256"
 
     # Generate CA's ephemeral key pair
-    if (k == None):
+    if k is None:
         k_long = randint(1, genP256.ecc.n - 1)
-        k = "{0:0>{width}X}".format(k_long, width=bitLen(genP256.ecc.n) * 2 / 8)
+        # unused k
+        k = "{0:0>{width}X}".format(k_long, width=bitLen(genP256.ecc.n) * 2 // 8)
     else:
         k_long = int(k, 16)
     kG = k_long * genP256
@@ -149,4 +150,5 @@ QU = reconstructPublicKey(CertU, QCA)
 print("QU =", QU)
 
 QU_ = int(dU, 16) * genP256
+
 assert QU_ == QU, "Reconstructed private key does not correspond to reconstructed public key"
