@@ -12,9 +12,9 @@ class BFKeyExpansionTests(unittest.TestCase):
         # Signing seed private key (256 bits)
         self.a = randint(1, genP256.ecc.n - 1)
         # Signing seed public key (2*256 bits)
-        self.A = a * genP256
+        self.A = self.a * genP256
         self.h = randint(1, genP256.ecc.n - 1)
-        self.H = h * genP256
+        self.H = self.h * genP256
 
         # AES keys (128 bits, randomly generated)
         self.ck = "{0:032X}".format(getrandbits(128))
@@ -25,14 +25,14 @@ class BFKeyExpansionTests(unittest.TestCase):
         # j (in range [1,20], padded to 32 bits)
         self.j = randint(1, 20)
 
-        self.x_cert = (i * radix_32 + j) * radix_32
-        self.x_enc = (((radix_32 - 1) * radix_32 + i) * radix_32 + j) * radix_32
+        self.x_cert = (self.i * radix_32 + self.j) * radix_32
+        self.x_enc = (((radix_32 - 1) * radix_32 + self.i) * radix_32 + self.j) * radix_32
 
     def test_fixture_must_use_seed_333(self):
         expected_i = "0x74F64E97"
         expected_j = "0x00000010"
         self.assertEqual(Hex(self.i, radix_32), expected_i)
-        self.assertEqual(Hex(j, radix_32), expected_j)
+        self.assertEqual(Hex(self.j, radix_32), expected_j)
 
     def test_f_k_int_x_cert(self):
         """f_k^{int}(x) = block1 || block2 || block3 (384 bits)"""
