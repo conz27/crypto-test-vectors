@@ -2,6 +2,7 @@
 
 import unittest
 from implicit import *
+from hashlib import *
 
 
 class ImplicitCertUtilTests(unittest.TestCase):
