@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 
 import unittest
+import binascii
+
 from ecc import *
+from hashlib import *
+from scms_crypto import Crypto
 
 
 class ECCTests(unittest.TestCase):
@@ -209,6 +213,36 @@ class ECCTests(unittest.TestCase):
         (r, s) = to_sign.sign_k(k_v, dgst_v)
         self.assertEqual(r_v, r)
         self.assertEqual(s_v, s)
+
+    def test_pkcs8_pub_pem_is_same_as_d_mult_base_point(self):
+        msg = "Example of ECDSA with P-256".encode()
+        sec = self.read_file('data/sgn_ec.pkcs8')
+        pub = self.read_file('data/sgn_ec_pub.pkcs8')
+        d = Crypto.ecp_get_private(sec, isCompressed=True)
+        d_v = int(binascii.hexlify(d), 16)
+        (x, y) = Crypto.ecp_get_public(pub, isCompressed=False)
+        x_v = int(binascii.hexlify(x), 16)
+        y_v = int(binascii.hexlify(y), 16)
+        Q = d_v * self.genP256
+        self.assertEqual(Q.x, x_v)
+        self.assertEqual(Q.y, y_v)
+
+    def test_signing_keys_from_ghs(self):
+        msg = "Example of ECDSA with P-256".encode()
+        sec = self.read_file('data/sgn_ec.pkcs8')
+        d = Crypto.ecp_get_private(sec, isCompressed=True)
+        d_v = int(binascii.hexlify(d), 16)
+        Q = d_v * self.genP256
+        to_sign = ECDSA(256, Q, d_v)
+        (r, s) = to_sign.sign(int(binascii.hexlify(msg), 16))
+        isVerified = to_sign.verify(int(binascii.hexlify(msg), 16), r, s)
+        self.assertTrue(isVerified)
+
+    def read_file(self, filename):
+        file = open(filename, 'rb')
+        buf = file.read()
+        file.close()
+        return buf
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,11 +1,13 @@
 from random import *
-from hashlib import *
+
 
 #
 # Bit operations
 #
 
 # bitLen() returns a length of the number in bits
+
+
 def bitLen(int_type):
     length = 0
     while int_type:
@@ -79,11 +81,10 @@ def sqrt(a, m):
 #
 
 def inthex_to_long(x):
+    # print("inthex_to_long(x): %s" % x)
     """Basic function to convert Int or String to Int"""
-    if type(x) is int or type(x) is int:
+    if type(x) is int:
         return int(x)
-    # StringType is invalid in Python 3
-    # elif type(x) is StringType:
     elif isinstance(x, str):
         return int(x, 16)
 
@@ -611,7 +612,7 @@ class ECDSA:
     def sign_k(self, k_in, digest):
         """Signing a hash digest, k is provided from a test vector"""
         digest = inthex_to_long(digest)
-        digest = digest >> self.shr_dgst
+        digest >>= self.shr_dgst
         R = k_in * ECPoint(self.ecc.gx, self.ecc.gy, self.ecc)
         s = modinv(k_in, self.ecc.n)
         s = (s * (digest + R.x * self.prv_key)) % self.ecc.n
