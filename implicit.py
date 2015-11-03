@@ -1,11 +1,13 @@
 from __future__ import print_function
 import binascii
 from ecc import *
+from hashlib import *
 
 radix_256 = 2 ** 256
 radix_8 = 2 ** 8
 
 genP256 = ECPoint(secp256r1.gx, secp256r1.gy, secp256r1)
+
 
 class ImplicitCertUtil:
     """Implicit Certificate Helper"""
