@@ -43,7 +43,7 @@ class ImplicitCertUtilTests(unittest.TestCase):
         self.assertEqual(r, self.r)
 
     def test_implicit_certificate_generation(self):
-        PU, CertU, r = ImplicitCertUtil.gen_cert(self.tbsCert, self.RU, self.dCA, k=self.k)
+        PU, CertU, r, _ = ImplicitCertUtil.gen_cert(self.tbsCert, self.RU, self.dCA, k=self.k)
         self.assertEqual(PU, self.PU)
         self.assertEqual(CertU, self.CertU)
         self.assertEqual(r, self.r)

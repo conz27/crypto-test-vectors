@@ -26,7 +26,7 @@ class ImplicitCertUtil:
 
 
         Outputs:
-        - PU:      {ec256 point} public key reconstruction point
+        - PU:      {ec256 point} User's public key reconstruction point
         - CertU:   {octet string} tbsCert || PU
                    In this script, to illustrate the concept, PU is concatenated with tbsCert;
                    it is somewhat similar to CertificateBase in 1609.2 (see 1609dot2-schema.asn)
@@ -38,6 +38,8 @@ class ImplicitCertUtil:
                      This was confirmed by William by email on Oct 29, 2015
                    Therefore here H(CertU) = H(tbsCert || PU) is just for illustration purposes
         - r:       {octet string} private key reconstruction value
+        [- k:      {octet string} CA's ephemeral key, should be kept secret
+                              but is output from this function for test purposes]
         """
         r_len = 256 / 8
         assert len(dCA) == r_len * 2, "input dCA must be of octet length: " + str(r_len)
@@ -69,7 +71,7 @@ class ImplicitCertUtil:
 
         r_long = (e_long * k_long + int(dCA, 16)) % genP256.ecc.n
         r = "{0:0>{width}X}".format(r_long, width=bitLen(genP256.ecc.n) * 2 // 8)
-        return PU, CertU, r
+        return PU, CertU, r, k
 
     @staticmethod
     def reconstruct_private(kU, CertU, r):
