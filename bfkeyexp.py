@@ -13,7 +13,7 @@ radix_8 = 2 ** 8
 
 genP256 = ECPoint(secp256r1.gx, secp256r1.gy, secp256r1)
 
-# Uncomment the following to obtain different values every time this script is run
+# Comment the following to obtain different values every time this script is run
 seed(333)
 
 
