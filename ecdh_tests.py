@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import unittest
-import binascii
 
 from ecdh import *
 
