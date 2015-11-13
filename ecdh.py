@@ -12,7 +12,7 @@ def ecdh(a, B):
     a = int(a, 16)
     aB = a * B
     Z = aB.x
-    ss = "{0:0>{width}X}".format(Z, width=bitLen(B.ecc.n) / 4).upper()
+    ss = "{0:0>{width}X}".format(Z, width=bitLen(B.ecc.n) // 4).upper()
     return ss
 
 
@@ -242,10 +242,10 @@ Z_lst = [ZIUT0, ZIUT1, ZIUT2, ZIUT3, ZIUT4, ZIUT5, ZIUT6, ZIUT7, ZIUT8, ZIUT9, Z
 
 i = 1
 for Ad, Bx, By, Zi in zip(Ad_lst, Bx_lst, By_lst, Z_lst):
-    a = "{0:0>{width}x}".format(Ad, width=bitLen(genP256.ecc.n) / 4)
+    a = "{0:0>{width}x}".format(Ad, width=bitLen(genP256.ecc.n) // 4)
     B = ECPoint(Bx, By, secp256r1)
     Z = ecdh(a, B)
-    Zi_str = "{0:0>{width}X}".format(Zi, width=bitLen(genP256.ecc.n) / 4)
+    Zi_str = "{0:0>{width}X}".format(Zi, width=bitLen(genP256.ecc.n) // 4)
     assert Z == Zi_str.upper(), "Shared secret does not match test vector"
 
     print(("Test Vector #" + str(i) + ":"))
