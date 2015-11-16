@@ -6,7 +6,7 @@ from ecdh import ecdh
 from kdf import sha256_kdf
 from mac1 import sha256_hmac
 
-# Uncomment the following to obtain different values every time this script is run
+# Comment the following to obtain different values every time this script is run
 seed(333)
 
 radix_256 = 2 ** 256
