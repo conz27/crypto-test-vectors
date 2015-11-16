@@ -41,7 +41,7 @@ def aes_ccm_enc(key, nonce, msg):
 
     aes = AES.new(binascii.unhexlify(key), AES.MODE_ECB)
 
-    # Authentication: AES-CBC-MAC(K, N, M)
+    # Authentication: AES-CBC-MAC(K, N, P)
     # Block B0
 
     #  L: #octets in length of message field
@@ -65,7 +65,7 @@ def aes_ccm_enc(key, nonce, msg):
 
     #         X_1     := E(K, B_0)
     #         X_{i+1} := E(K, X_i XOR B_i)
-    #         T := first-M-bytes( X_n+1 )
+    #         T := first-bytes( X_n+1 )
 
     B_0_0 = "{0:02X}".format((((tag_len - 2) // 2) << 3) | (msg_len_len - 1))
     nonce_padded = "{0:0>{width}}".format(nonce, width=nonce_len * 2)
@@ -90,7 +90,7 @@ def aes_ccm_enc(key, nonce, msg):
         # Authentication tag T is the same length as AES block here so no truncation needed
         # Final tag is encrypted and is calculated after the first encrypted block is calculated
 
-        # Encryption: AES-CTR(K, N, M)
+        # Encryption: AES-CTR(K, N, P)
     #    key stream blocks:
     #      S_i := E( K, A_i )   for i=0, 1, 2, ...
     #    Ciphertext:
@@ -110,9 +110,8 @@ def aes_ccm_enc(key, nonce, msg):
     # Flags byte = (#octest in length of message field-1) = L-1
 
     A_0_0 = "{0:02X}".format(msg_len_len - 1)
-    # nonce_padded as calculated above
     counter = "{0:0{width}X}".format(0, width=msg_len_len * 2)
-    A_0 = A_0_0 + nonce_padded + counter
+    A_0 = A_0_0 + nonce_padded + counter  # nonce_padded: as calculated above
 
     enc_S_0 = aes.encrypt(binascii.unhexlify(A_0))
     S_0 = binascii.hexlify(enc_S_0)
