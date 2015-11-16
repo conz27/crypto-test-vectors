@@ -19,7 +19,7 @@ genP256 = ECPoint(secp256r1.gx, secp256r1.gy, secp256r1)
 
 
 def ecies_enc(R, k, p1, v=None):
-    '''
+    """
     ECIES Encryption as per 1609.2,
     Used to wrap AES-CCM 128-bit keys
 
@@ -32,7 +32,7 @@ def ecies_enc(R, k, p1, v=None):
     - V:  {ec256 point} Sender's ephemeral public key
     - C:  {octet string} Ciphertext, i.e. enc(k) (128 bits)
     - T:  {octet string} Authentication tag, (128 bits)
-    '''
+    """
 
     k_len = 128 / 8
     p1_len = 256 / 8
@@ -70,7 +70,7 @@ def ecies_enc(R, k, p1, v=None):
 
 
 def ecies_dec(V, C, T, r, p1):
-    '''
+    """
     ECIES Decryption as per 1609.2,
     Used to unwrap AES-CCM 128-bit keys
 
@@ -83,7 +83,7 @@ def ecies_dec(V, C, T, r, p1):
 
     Outputs:
     - k:  {octet string} AES-CCM 128-bit key, unwrapped (128 bits)
-    '''
+    """
     k_len = 128 / 8
     p1_len = 256 / 8
     assert len(C) == k_len * 2, "input C must be of octet length: " + str(k_len)
