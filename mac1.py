@@ -2,6 +2,9 @@ import os
 from hashlib import sha256
 import hmac
 from math import ceil
+
+import binascii
+
 from array import *
 
 radix_256 = 2 ** 256
@@ -27,15 +30,15 @@ def sha256_hmac(key, msg):
     tag, an octet string of bit length = 128, i.e. 16 octets
     """
 
-    sha256_in_blk_len = 512 / 8
+    sha256_in_blk_len = 512 // 8
     num_blk_in = int(ceil(len(msg) / float(sha256_in_blk_len)))
-    tag_len = 128 / 8
+    tag_len = 128 // 8
 
     # If the key is longer than 512 bits, let key = sha256(key)
     # else, right-pad it with 0s to 512-bit long
     if len(key) > sha256_in_blk_len:
         key = sha256(key.decode('hex')).hexdigest()
-    key += "00" * (sha256_in_blk_len - (len(key) / 2))
+    key += "00" * (sha256_in_blk_len - (len(key) // 2))
 
     key_xor_ipad = [Hex(int(x, 16) ^ 0x36, radix_8) for x in key]
     key_xor_opad = [Hex(int(x, 16) ^ 0x5C, radix_8) for x in key]
@@ -54,8 +57,8 @@ def sha256_hmac(key, msg):
     key_xor_opad = "{0:0128x}".format(key_xor_opad)
     # print("key_xor_opad: " + key_xor_opad)
 
-    inner_hash = sha256((key_xor_ipad + msg).decode('hex')).hexdigest()
-    hmac_out = sha256((key_xor_opad + inner_hash).decode('hex')).hexdigest()
+    inner_hash = sha256(binascii.unhexlify(key_xor_ipad + msg)).hexdigest()
+    hmac_out = sha256(binascii.unhexlify(key_xor_opad + inner_hash)).hexdigest()
 
     tag = hmac_out[:tag_len * 2]
     # print("tag:          " + tag)

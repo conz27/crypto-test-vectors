@@ -34,32 +34,32 @@ def ecies_enc(R, k, p1, v=None):
     - T:  {octet string} Authentication tag, (128 bits)
     """
 
-    k_len = 128 / 8
-    p1_len = 256 / 8
+    k_len = 128 // 8
+    p1_len = 256 // 8
     assert len(k) == k_len * 2, "input k must be of octet length: " + str(k_len)
     assert len(p1) == p1_len * 2, "input P1 must be of octet length: " + str(p1_len)
     assert R.is_on_curve(), "recipient's public key must be a point on the curve P-256"
 
     # Generate Sender's ephemeral key pair (v, V)
-    if (v == None):
+    if v is None:
         v_long = randint(1, genP256.ecc.n - 1)
-        v = "{0:0>{width}X}".format(v_long, width=bitLen(genP256.ecc.n) * 2 / 8)
+        v = "{0:0>{width}X}".format(v_long, width=bitLen(genP256.ecc.n) * 2 // 8)
     else:
-        v_long = long(v, 16)
+        v_long = int(v, 16)
     V = v_long * genP256
 
     # ECDH: compute a shared secret (sender's private key, recipient's public key)
     ss = ecdh(v, R)
 
     # Derive K1 and K2 with KDF
-    K1_len = 128 / 8
-    K2_len = 256 / 8
+    K1_len = 128 // 8
+    K2_len = 256 // 8
     dl = K1_len + K2_len
     K1_K2 = sha256_kdf(ss, p1, dl)
 
     # Encrypt k by XORing it with K1
     K1 = K1_K2[:K1_len * 2]
-    enc_k = long(k, 16) ^ long(K1, 16)
+    enc_k = int(k, 16) ^ int(K1, 16)
     C = "{0:0>{width}X}".format(enc_k, width=k_len * 2)
 
     # Calculate MAC1 on C with key K2
@@ -84,8 +84,8 @@ def ecies_dec(V, C, T, r, p1):
     Outputs:
     - k:  {octet string} AES-CCM 128-bit key, unwrapped (128 bits)
     """
-    k_len = 128 / 8
-    p1_len = 256 / 8
+    k_len = 128 // 8
+    p1_len = 256 // 8
     assert len(C) == k_len * 2, "input C must be of octet length: " + str(k_len)
     assert len(p1) == p1_len * 2, "input P1 must be of octet length: " + str(p1_len)
     assert V.is_on_curve(), "sender's public key must be a point on the curve P-256"
@@ -94,8 +94,8 @@ def ecies_dec(V, C, T, r, p1):
     ss = ecdh(r, V)
 
     # Derive K1 and K2 with KDF
-    K1_len = 128 / 8
-    K2_len = 256 / 8
+    K1_len = 128 // 8
+    K2_len = 256 // 8
     dl = K1_len + K2_len
     K1_K2 = sha256_kdf(ss, p1, dl)
 
@@ -108,7 +108,7 @@ def ecies_dec(V, C, T, r, p1):
 
     # Decrypt k by XORing C with K1
     K1 = K1_K2[:K1_len * 2]
-    dec_C = long(C, 16) ^ long(K1, 16)
+    dec_C = int(C, 16) ^ int(K1, 16)
     k = "{0:0>{width}X}".format(dec_C, width=k_len * 2)
 
     return k
@@ -159,7 +159,7 @@ Ry_list = [Ry1, Ry1, Ry2, Ry2]
 
 i = 1
 for v, k, p1, r, Rx, Ry in zip(v_list, k_list, p1_list, r_list, Rx_list, Ry_list):
-    R = ECPoint(long(Rx, 16), long(Ry, 16), secp256r1)
+    R = ECPoint(int(Rx, 16), int(Ry, 16), secp256r1)
     V, C, T, v = ecies_enc(R, k, p1, v=v)
     k_dec = ecies_dec(V, C, T, r, p1)
     assert k_dec == k, "decrypted key differs from original key"
@@ -169,32 +169,32 @@ for v, k, p1, r, Rx, Ry in zip(v_list, k_list, p1_list, r_list, Rx_list, Ry_list
 
     print("Sender's ephemeral private key:")
     print("v = 0x" + v)
-    cArrayDef("", "v", long(v, 16), len(v) / 2, radix_8, False);
+    cArrayDef("", "v", int(v, 16), len(v) // 2, radix_8, False)
     print(os.linesep)
 
     print("AES key to be encrypted (wrapped):")
     print("k = 0x" + k)
-    cArrayDef("", "k", long(k, 16), len(k) / 2, radix_8, False);
+    cArrayDef("", "k", int(k, 16), len(k) // 2, radix_8, False)
     print(os.linesep)
 
     print("Hash(RecipientInfo):")
     print("P1 = 0x" + k)
-    cArrayDef("", "P1", long(k, 16), len(k) / 2, radix_8, False);
+    cArrayDef("", "P1", int(k, 16), len(k) // 2, radix_8, False)
     print(os.linesep)
 
     print("Recipient's private key (Decryption input):")
     print("r = 0x" + r)
-    cArrayDef("", "r", long(r, 16), len(r) / 2, radix_8, False);
+    cArrayDef("", "r", int(r, 16), len(r) // 2, radix_8, False)
     print(os.linesep)
 
     print("Recipient's public key (x-coordinate):")
     print("Rx = 0x" + Rx)
-    cArrayDef("", "Rx", long(Rx, 16), len(Rx) / 2, radix_8, False);
+    cArrayDef("", "Rx", int(Rx, 16), len(Rx) // 2, radix_8, False)
     print(os.linesep)
 
     print("Recipient's public key (y-coordinate):")
     print("Ry = 0x" + Ry)
-    cArrayDef("", "Ry", long(Ry, 16), len(Ry) / 2, radix_8, False);
+    cArrayDef("", "Ry", int(Ry, 16), len(Ry) // 2, radix_8, False)
     print(os.linesep)
 
     print("Encryption Output:")
@@ -202,22 +202,22 @@ for v, k, p1, r, Rx, Ry in zip(v_list, k_list, p1_list, r_list, Rx_list, Ry_list
 
     print("Sender's ephemeral public key (x-coordinate):")
     print("Vx = " + Hex(V.x, radix_256))
-    cArrayDef("", "Vx", V.x, 256 / 8, radix_8, False);
+    cArrayDef("", "Vx", V.x, 256 // 8, radix_8, False)
     print(os.linesep)
 
     print("Sender's ephemeral public key (y-coordinate):")
     print("Vy = " + Hex(V.y, radix_256))
-    cArrayDef("", "Vx", V.y, 256 / 8, radix_8, False);
+    cArrayDef("", "Vx", V.y, 256 // 8, radix_8, False)
     print(os.linesep)
 
     print("Encrypted (wrapped) AES key:")
     print("C = 0x" + C)
-    cArrayDef("", "C", long(C, 16), len(C) / 2, radix_8, False);
+    cArrayDef("", "C", int(C, 16), len(C) // 2, radix_8, False)
     print(os.linesep)
 
     print("Authentication tag:")
     print("T = 0x" + T)
-    cArrayDef("", "T", long(T, 16), len(T) / 2, radix_8, False);
+    cArrayDef("", "T", int(T, 16), len(T) // 2, radix_8, False)
     print(os.linesep)
 
     i += 1
