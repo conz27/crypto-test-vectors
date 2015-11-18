@@ -2,8 +2,8 @@
 
 import unittest
 from aesccm import *
-
 from scms_crypto import *
+
 
 class AESCCMTests(unittest.TestCase):
     """
@@ -23,6 +23,7 @@ class AESCCMTests(unittest.TestCase):
     # Output:
     # ciphertext || tag = C || T {octet string}
     # """
+
     def setUp(self):
         self.key1 = "E58D5C8F8C9ED9785679E08ABC7C8116"
         self.key2 = "B8453A728060F8D517BACEED3829F4D9"
@@ -71,6 +72,7 @@ class AESCCMTests(unittest.TestCase):
         c_t = aes_ccm_enc(self.key1, nonce, pt)
         PT = aes_ccm_dec(self.key1, nonce, c_t)
         self.assertEqual(pt, PT)
+
 
 if __name__ == '__main__':
     unittest.main()

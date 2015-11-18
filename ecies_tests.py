@@ -28,16 +28,16 @@ class ECIESTests(unittest.TestCase):
     """
 
     def test_ecies_vector_one(self):
-        k1 = "9169155B08B07674CBADF75FB46A7B0D"
-        p11 = "A6B7B52554B4203F7E3ACFDB3A3ED8674EE086CE5906A7CAC2F8A398306D3BE9"
+        k = "9169155B08B07674CBADF75FB46A7B0D"
+        P1 = "A6B7B52554B4203F7E3ACFDB3A3ED8674EE086CE5906A7CAC2F8A398306D3BE9"
         r1 = "060E41440A4E35154CA0EFCB52412145836AD032833E6BC781E533BF14851085"
         Rx1 = "8C5E20FE31935F6FA682A1F6D46E4468534FFEA1A698B14B0B12513EED8DEB11"
         Ry1 = "1270FEC2427E6A154DFCAE3368584396C8251A04E2AE7D87B016FF65D22D6F9E"
 
         R = ECPoint(int(Rx1, 16), int(Ry1, 16), secp256r1)
-        V, C, T, v = ecies_enc(R, k1, p11, v=None)
-        k_dec = ecies_dec(V, C, T, r1, p11)
-        self.assertEqual(k_dec, k1)
+        V, C, T, _ = ecies_enc(R, k, P1)
+        k_dec = ecies_dec(V, C, T, r1, P1)
+        self.assertEqual(k_dec, k)
 
     def test_ecies_vector_two(self):
         k2 = "687E9757DEBFD87B0C267330C183C7B6"
