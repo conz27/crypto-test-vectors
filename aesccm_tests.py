@@ -3,6 +3,7 @@
 import unittest
 from aesccm import *
 
+from scms_crypto import *
 
 class AESCCMTests(unittest.TestCase):
     """
@@ -64,6 +65,12 @@ class AESCCMTests(unittest.TestCase):
         PT = aes_ccm_dec(self.key2, self.nonce2, c_t)
         self.assertEqual(pt3, PT)
 
+    def aesccm_using_nist_sha512_random_nonce(self):
+        pt = "ABCDEF"
+        nonce = binascii.hexlify(Crypto.random(12)).decode('utf-8')
+        c_t = aes_ccm_enc(self.key1, nonce, pt)
+        PT = aes_ccm_dec(self.key1, nonce, c_t)
+        self.assertEqual(pt, PT)
 
 if __name__ == '__main__':
     unittest.main()
