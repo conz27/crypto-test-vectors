@@ -16,7 +16,7 @@ radix_32 = 2**32
 radix_16 = 2**16
 radix_8  = 2**8
 
-#Uncomment the following to obtain different values every time this script is run
+# Comment the following to obtain different values every time this script is run
 seed(333)
 
 

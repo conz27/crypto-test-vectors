@@ -1,3 +1,4 @@
+# TODO: fix; requires pycrypto (wrt dependency thinning)
 from Crypto.Cipher import AES
 from ecc import *
 import binascii
