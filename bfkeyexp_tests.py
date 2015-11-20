@@ -1,15 +1,23 @@
 #!/usr/bin/env python3
 
 import unittest
+from ecc import *
 from array import *
 from bfkeyexp import *
+
+radix_256 = 2 ** 256
+radix_128 = 2 ** 128
+radix_32 = 2 ** 32
+radix_16 = 2 ** 16
+radix_8 = 2 ** 8
+
+genP256 = ECPoint(secp256r1.gx, secp256r1.gy, secp256r1)
 
 
 class BFKeyExpansionTests(unittest.TestCase):
     def setUp(self):
         # Test fixture is based on seed(333)
         seed(333)
-
         # Signing seed private key (256 bits)
         self.a = randint(1, genP256.ecc.n - 1)
         # Signing seed public key (2*256 bits)
