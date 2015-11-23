@@ -52,19 +52,14 @@ class LinkageValuesTests(unittest.TestCase):
 
         # LA1
         ls1_1 = genls(1, 1, self.la_id1, ls1_0)
-        print(ls1_1)
         plv1_1_j = genplv(1, 1, self.la_id1, ls1_1, j)
-        print(plv1_1_j)
 
         # LA2
         ls2_1 = genls(2, 1, self.la_id2, ls2_0)
-        print(ls2_1)
         plv2_1_j = genplv(2, 1, self.la_id2, ls2_1, j)
-        print(plv2_1_j)
 
         # lv (1,j)
         lv_1_j = genlv(1, plv1_1_j, plv2_1_j)
-        print(lv_1_j)
 
         self.assertEqual(ls1_1, "828097e29341a95c19cf31bd0a38e028")
         self.assertEqual(plv1_1_j, 3264427119751052742155)
