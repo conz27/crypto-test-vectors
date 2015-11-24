@@ -31,8 +31,8 @@ def sha256_kdf(ss, kdp, dl):
 
     assert dl >= 0, 'dl should be positive integer'
 
-    sha256_blk_len = 256 // 8
-    num_blk_out = int(ceil(dl // float(sha256_blk_len)))
+    sha256_blk_len = 256 / 8
+    num_blk_out = int(ceil(dl / float(sha256_blk_len)))
 
     kdf_out = ''
     for i in range(1, num_blk_out + 1):
@@ -40,5 +40,6 @@ def sha256_kdf(ss, kdp, dl):
         kdf_out += sha256(hash_input).hexdigest()
 
     kdf_out = kdf_out[:dl * 2]
+    print("kdf: ", kdf_out)
     return kdf_out
 

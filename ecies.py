@@ -47,6 +47,7 @@ def ecies_enc(R, k, p1, v=None):
 
     # ECDH: compute a shared secret (sender's private key, recipient's public key)
     ss = ecdh(v, R)
+    print("ss: ", ss)
 
     # Derive K1 and K2 with KDF
     K1_len = 128 // 8
