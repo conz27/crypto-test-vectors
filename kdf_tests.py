@@ -18,6 +18,7 @@ class KDFTests(unittest.TestCase):
         dl = len(known_key1) // 2
         kdf_out = sha256_kdf(known_ss1, known_kdp1, dl)
         self.assertEqual(kdf_out, known_key1)
+        self.assertEqual(len(kdf_out) // 2, dl)
 
     def test_kdf_vector_two(self):
         """Test vector #2, ANSI X9.63
@@ -32,6 +33,7 @@ class KDFTests(unittest.TestCase):
         dl = len(known_key2) // 2
         kdf_out = sha256_kdf(known_ss2, known_kdp2, dl)
         self.assertEqual(kdf_out, known_key2)
+        self.assertEqual(len(kdf_out) // 2, dl)
 
     def test_kdf_vector_three(self):
         """Test vector #3, ANSI X9.63
@@ -46,6 +48,7 @@ class KDFTests(unittest.TestCase):
         dl = len(known_key3) // 2
         kdf_out = sha256_kdf(known_ss3, known_kdp3, dl)
         self.assertEqual(kdf_out, known_key3)
+        self.assertEqual(len(kdf_out) // 2, dl)
 
     def test_kdf_vector_four(self):
         """Test vector #4, ANSI X9.63
@@ -60,6 +63,7 @@ class KDFTests(unittest.TestCase):
         dl = len(known_key4) // 2
         kdf_out = sha256_kdf(known_ss4, known_kdp4, dl)
         self.assertEqual(kdf_out, known_key4)
+        self.assertEqual(len(kdf_out) // 2, dl)
 
 
 if __name__ == '__main__':
