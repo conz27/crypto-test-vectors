@@ -27,7 +27,6 @@ class GroupLinkageValuesTests(unittest.TestCase):
         self.assertEqual(self.la_id1, 36361)
         self.assertEqual(self.la_id2, 22990)
 
-# def test_vector_i_is_zero_and_j_is_random_from_one_to_twenty(self):
     def test_vector_i_is_zero_and_j_is_random_32bit_value(self):
         # j (32 bits)
         j = getrandbits(32)  # 1212214562
