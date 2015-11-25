@@ -14,19 +14,22 @@ def genei(ik, j, k):
     print("Encrypted indices function AES input = j (32-bit) || k (32-bit) || 0 (64-bit) =")
     aes_in_j_k = "{0:032X}".format(((j << 32) + k) << 64)
     print(("0x" + aes_in_j_k))
-    cArrayDef("", "aes_in_j_k", int(aes_in_j_k, 16), 128/8, radix_8, False); print(os.linesep)
+    cArrayDef("", "aes_in_j_k", int(aes_in_j_k, 16), 128/8, radix_8, False)
+    print(os.linesep)
 
     print("AES output (128 bits) = AES_ik (j || k || 0^{64}) =")
     # aes_out_j_k = aes_obj.encrypt(aes_in_j_k.decode('hex')).encode('hex')
     aes_out_j_k = aes_obj.encrypt(binascii.unhexlify(aes_in_j_k))
     aes_out_j_k = binascii.hexlify(aes_out_j_k)
     print(("0x" + aes_out_j_k.decode()))
-    cArrayDef("", "aes_out_j_k", int(aes_out_j_k, 16), 128/8, radix_8, False); print(os.linesep)
+    cArrayDef("", "aes_out_j_k", int(aes_out_j_k, 16), 128/8, radix_8, False)
+    print(os.linesep)
 
     print("ei(j,k): Encrypted indices function = AES output XOR AES input (128 bits) = ")
     ei_j_k = int(aes_in_j_k, 16) ^ int(aes_out_j_k, 16)
     print((Hex(ei_j_k, radix_128)))
-    cArrayDef("", "ei_j_k", ei_j_k, 128/8, radix_8, False); print(os.linesep)
+    cArrayDef("", "ei_j_k", ei_j_k, 128/8, radix_8, False)
+    print(os.linesep)
 
     return ei_j_k
 
