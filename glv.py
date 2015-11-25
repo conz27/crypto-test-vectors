@@ -5,8 +5,11 @@
 
 from lv import *
 
+seed(333)
+
+
 def genei(ik, j, k):
-    aes_obj = AES.new(ik.decode('hex'), AES.MODE_ECB)
+    aes_obj = AES.new(binascii.unhexlify(ik), AES.MODE_ECB)
 
     print("Encrypted indices function AES input = j (32-bit) || k (32-bit) || 0 (64-bit) =")
     aes_in_j_k = "{0:032X}".format(((j << 32) + k) << 64)
@@ -14,8 +17,10 @@ def genei(ik, j, k):
     cArrayDef("", "aes_in_j_k", int(aes_in_j_k, 16), 128/8, radix_8, False); print(os.linesep)
 
     print("AES output (128 bits) = AES_ik (j || k || 0^{64}) =")
-    aes_out_j_k = aes_obj.encrypt(aes_in_j_k.decode('hex')).encode('hex')
-    print(("0x" + aes_out_j_k.upper()))
+    # aes_out_j_k = aes_obj.encrypt(aes_in_j_k.decode('hex')).encode('hex')
+    aes_out_j_k = aes_obj.encrypt(binascii.unhexlify(aes_in_j_k))
+    aes_out_j_k = binascii.hexlify(aes_out_j_k)
+    print(("0x" + aes_out_j_k.decode()))
     cArrayDef("", "aes_out_j_k", int(aes_out_j_k, 16), 128/8, radix_8, False); print(os.linesep)
 
     print("ei(j,k): Encrypted indices function = AES output XOR AES input (128 bits) = ")
