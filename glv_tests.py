@@ -18,8 +18,10 @@ class GroupLinkageValuesTests(unittest.TestCase):
     def setUp(self):
         # Changing seed will break tests.
         seed(333)
-        self.la_id1 = getrandbits(16)  # "36361"
-        self.la_id2 = getrandbits(16)  # "22990"
+        self.la_id1 = getrandbits(16)  # LA1 ID (16 bits)
+        self.la_id2 = getrandbits(16)  # LA2 ID (16 bits)
+        self.k = getrandbits(16)  # Group Chain Identifier (32 bits)
+        self.ik = "{0:032X}".format(getrandbits(128))  # Indices Key; shared by LA1 & LA2 (128 bits)
 
     def test_la_ids_are_expected_values_given_seed_333(self):
         self.assertEqual(self.la_id1, 36361)
