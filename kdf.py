@@ -40,6 +40,6 @@ def sha256_kdf(ss, kdp, dl):
         kdf_out += sha256(hash_input).hexdigest()
 
     kdf_out = kdf_out[:dl * 2]
-    print("kdf: ", kdf_out)
+    print("kdf(%d): %s" % (len(kdf_out)//2, kdf_out))
     return kdf_out
 

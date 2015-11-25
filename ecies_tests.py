@@ -36,9 +36,9 @@ class ECIESTests(unittest.TestCase):
 
         R = ECPoint(int(Rx, 16), int(Ry, 16), secp256r1)
         V, C, T, _ = ecies_enc(R, k, P1)
-        print("V: ", V)
-        print("C: ", C)
-        print("T: ", T)
+        print("V: %s" % V)
+        print("C(%d): %s" % (len(C)//2, C))
+        print("T(%d): %s" % (len(T)//2, T))
         k_dec = ecies_dec(V, C, T, r, P1)
         self.assertEqual(k_dec, k)
 
