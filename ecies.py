@@ -1,7 +1,7 @@
 from __future__ import print_function
 import os
 
-from array import *
+from arrays import *
 from ecc import *
 from ecdh import ecdh
 from kdf import sha256_kdf

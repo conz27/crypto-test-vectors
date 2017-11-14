@@ -3,7 +3,7 @@ import os
 from hashlib import sha256
 from math import ceil
 
-from array import *
+from arrays import *
 
 radix_256 = 2**256
 radix_128 = 2**128
