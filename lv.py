@@ -7,7 +7,7 @@ import os
 from Crypto.Cipher import AES
 from hashlib import sha256
 
-from array import *
+from arrays import *
 from random import *
 
 radix_128 = 2**128

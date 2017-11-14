@@ -2,7 +2,7 @@ from __future__ import print_function
 import os
 from Crypto.Cipher import AES
 
-from array import *
+from arrays import *
 
 radix_256 = 2**256
 radix_128 = 2**128

@@ -1,6 +1,6 @@
 import os
 
-from array import *
+from arrays import *
 from ecc import *
 
 radix_256 = 2**256

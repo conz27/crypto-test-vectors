@@ -2,7 +2,7 @@ from __future__ import print_function
 import os
 from Crypto.Cipher import AES
 
-from array import *
+from arrays import *
 from ecc import *
 
 #Uncomment the following to obtain different values every time this script is run

@@ -2,7 +2,7 @@ from __future__ import print_function
 import os
 from hashlib import sha256
 
-from array import *
+from arrays import *
 from ecc import *
 
 radix_256 = 2**256
